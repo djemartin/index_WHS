@@ -9,10 +9,33 @@ db = TinyDB(DB_PATH)
 
 tours_table = db.table('tours')
 scores_table = db.table('scores')
+golfs_table = db.table('golfs')
 
 @app.route('/')
 def index():
-    return render_template('index.html', tours=tours_table.all())
+    golfs = {g.doc_id: g for g in golfs_table.all()}
+    return render_template('index.html', tours=tours_table.all(), golfs=golfs)
+
+@app.route('/golf', methods=['GET', 'POST'])
+def manage_golf():
+    golf_id = request.args.get('id', type=int)
+    golf = golfs_table.get(doc_id=golf_id) if golf_id else None
+    if request.method == 'POST':
+        form_id = request.form.get('id', type=int)
+        data = {
+            'name': request.form.get('name'),
+            'course': request.form.get('course'),
+            'par': request.form.get('par', type=int),
+            'tees': request.form.get('tees'),
+            'slope': request.form.get('slope', type=int),
+            'sss': request.form.get('sss', type=int)
+        }
+        if form_id:
+            golfs_table.update(data, doc_ids=[form_id])
+        else:
+            golfs_table.insert(data)
+        return redirect(url_for('add_tour'))
+    return render_template('golf_form.html', golf=golf)
 
 @app.route('/add_tour', methods=['GET', 'POST'])
 def add_tour():
@@ -20,7 +43,7 @@ def add_tour():
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         tour = {
             'name': request.form.get('name'),
-            'golf': request.form.get('golf'),
+            'golf_id': request.form.get('golf', type=int),
             'par': request.form.get('par', type=int),
             'slope': request.form.get('slope', type=int),
             'sss': request.form.get('sss', type=int),
@@ -28,7 +51,8 @@ def add_tour():
         }
         tours_table.insert(tour)
         return redirect(url_for('index'))
-    return render_template('add_tour.html')
+    golfs = golfs_table.all()
+    return render_template('add_tour.html', golfs=golfs)
 
 @app.route('/add_score/<int:tour_id>', methods=['GET', 'POST'])
 def add_score(tour_id):

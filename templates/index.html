@@ -9,6 +9,7 @@
 <header>
     <nav>
         <a href="/add_tour">Ajouter un Tour</a>
+        <a href="/golf">Gérer les Golfs</a>
     </nav>
 </header>
 <main>
@@ -16,7 +17,12 @@
     <ul>
         {% for tour in tours %}
         <li>
-            {{ tour.name }} - <a href="/add_score/{{ tour.doc_id }}">Saisir Score</a>
+            {{ tour.name }}
+            {% set g = golfs.get(tour.golf_id) %}
+            {% if g %}
+                ({{ g.name }})
+            {% endif %}
+             - <a href="/add_score/{{ tour.doc_id }}">Saisir Score</a>
         </li>
         {% else %}
         <li>Aucun tour enregistré.</li>

@@ -9,13 +9,22 @@
 <header>
     <nav>
         <a href="/">Accueil</a>
+        <a href="/golf">Gérer les Golfs</a>
     </nav>
 </header>
 <main>
     <h1>Ajouter un Tour</h1>
     <form method="post">
         <label>Nom du Tour <input type="text" name="name" required></label><br>
-        <label>Golf joué <input type="text" name="golf" required></label><br>
+        <label>Golf joué 
+            <select name="golf" id="golf_select" required>
+                <option value="">--Choisir--</option>
+                {% for g in golfs %}
+                <option value="{{ g.doc_id }}">{{ g.name }}</option>
+                {% endfor %}
+            </select>
+            <a href="/golf">+</a>
+        </label><br>
         <label>Par du parcours <input type="number" name="par" step="1" required></label><br>
         <label>Slope <input type="number" name="slope" step="1" required></label><br>
         <label>SSS <input type="number" name="sss" step="1" required></label><br>
@@ -39,5 +48,26 @@
         <button type="submit">Enregistrer</button>
     </form>
 </main>
+<script>
+    const golfData = {{ golfs|tojson }};
+    function updateGolfInfo(id){
+        const g = golfData.find(x => x.doc_id == id);
+        if(!g) return;
+        document.querySelector('input[name="par"]').value = g.par;
+        document.querySelector('input[name="slope"]').value = g.slope;
+        document.querySelector('input[name="sss"]').value = g.sss;
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+        const select = document.getElementById('golf_select');
+        if(select){
+            select.addEventListener('change', function(){
+                updateGolfInfo(parseInt(this.value));
+            });
+            if(select.value){
+                updateGolfInfo(parseInt(select.value));
+            }
+        }
+    });
+</script>
 </body>
 </html>
