@@ -23,7 +23,8 @@
         <label>Par du parcours <input type="number" name="par" step="1" value="{{ golf.par if golf else '' }}" required></label><br>
         <label>Boules de départ <input type="text" name="tees" value="{{ golf.tees if golf else '' }}" required></label><br>
         <label>Slope <input type="number" name="slope" step="1" value="{{ golf.slope if golf else '' }}" required></label><br>
-        <label>SSS <input type="number" name="sss" step="1" value="{{ golf.sss if golf else '' }}" required></label><br>
+        <!-- SSS can contain decimal values so use a text field -->
+        <label>SSS <input type="text" name="sss" value="{{ golf.sss if golf else '' }}" required></label><br>
         <button type="submit">Enregistrer</button>
     </form>
 </main>
