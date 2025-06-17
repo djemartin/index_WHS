@@ -57,6 +57,7 @@ def add_tour():
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         tour = {
             'name': request.form.get('name'),
+            'jour': request.form.get('jour', type=int),
             'golf_id': request.form.get('golf', type=int),
             'par': request.form.get('par', type=int),
             'slope': request.form.get('slope', type=int),

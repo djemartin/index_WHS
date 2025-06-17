@@ -18,6 +18,7 @@
         <thead>
             <tr>
                 <th>Nom</th>
+                <th>Jour</th>
                 <th>Golf</th>
                 <th>Actions</th>
             </tr>
@@ -26,6 +27,7 @@
             {% for tour in tours %}
             <tr>
                 <td>{{ tour.name }}</td>
+                <td>{{ tour.get('jour') }}</td>
                 <td>
                     {% set g = golfs.get(tour.golf_id) %}
                     {{ g.name if g }}
@@ -39,7 +41,7 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="3">Aucun tour enregistré.</td></tr>
+            <tr><td colspan="4">Aucun tour enregistré.</td></tr>
             {% endfor %}
         </tbody>
     </table>

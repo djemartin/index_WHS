@@ -4,7 +4,7 @@ This Flask app lets you record golf rounds and scores.
 You can also manage information about each golf course.
 
 Key features:
-- Full CRUD management for tours with per-hole par values.
+- Full CRUD management for tours with per-hole par values and a day number.
 - Manage golf courses (name, course, par, slope and SSS).
 - Input scores for each hole of a tour.
 - View, edit and delete existing tours from the home page.
