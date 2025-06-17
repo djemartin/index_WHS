@@ -19,6 +19,23 @@
         <label>Par du parcours <input type="number" name="par" required></label><br>
         <label>Slope <input type="number" name="slope" required></label><br>
         <label>SSS <input type="number" name="sss" required></label><br>
+        <h2>Par par trou</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Trou</th>
+                    <th>Par</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(1, 19) %}
+                <tr>
+                    <td>{{ i }}</td>
+                    <td><input type="number" name="par_{{ i }}" required></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <button type="submit">Enregistrer</button>
     </form>
 </main>

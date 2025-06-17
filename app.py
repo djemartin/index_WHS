@@ -17,12 +17,14 @@ def index():
 @app.route('/add_tour', methods=['GET', 'POST'])
 def add_tour():
     if request.method == 'POST':
+        pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         tour = {
             'name': request.form.get('name'),
             'golf': request.form.get('golf'),
             'par': request.form.get('par'),
             'slope': request.form.get('slope'),
             'sss': request.form.get('sss'),
+            'pars': pars,
         }
         tours_table.insert(tour)
         return redirect(url_for('index'))
@@ -49,6 +51,8 @@ def add_score(tour_id):
         }
         scores_table.insert(score)
         return redirect(url_for('index'))
+    if 'pars' not in tour:
+        tour['pars'] = [4] * 18
     return render_template('add_score.html', tour=tour)
 
 if __name__ == '__main__':
