@@ -49,7 +49,7 @@
     </form>
 </main>
 <script>
-    const golfData = {{ golfs|tojson }};
+    const golfData = {{ golfs_json|tojson }};
     function updateGolfInfo(id){
         const g = golfData.find(x => x.doc_id == id);
         if(!g) return;
