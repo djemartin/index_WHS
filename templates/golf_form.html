@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion Golf</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">Accueil</a>
+        <a href="/add_tour">Ajouter un Tour</a>
+    </nav>
+</header>
+<main>
+    <h1>{% if golf %}Modifier le Golf{% else %}Ajouter un Golf{% endif %}</h1>
+    <form method="post">
+        {% if golf %}
+        <input type="hidden" name="id" value="{{ golf.doc_id }}">
+        {% endif %}
+        <label>Nom du Golf <input type="text" name="name" value="{{ golf.name if golf else '' }}" required></label><br>
+        <label>Nom du Parcours <input type="text" name="course" value="{{ golf.course if golf else '' }}" required></label><br>
+        <label>Par du parcours <input type="number" name="par" step="1" value="{{ golf.par if golf else '' }}" required></label><br>
+        <label>Boules de départ <input type="text" name="tees" value="{{ golf.tees if golf else '' }}" required></label><br>
+        <label>Slope <input type="number" name="slope" step="1" value="{{ golf.slope if golf else '' }}" required></label><br>
+        <label>SSS <input type="number" name="sss" step="1" value="{{ golf.sss if golf else '' }}" required></label><br>
+        <button type="submit">Enregistrer</button>
+    </form>
+</main>
+</body>
+</html>
