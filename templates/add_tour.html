@@ -30,7 +30,7 @@
         </label><br>
         <label>Par du parcours <input type="number" name="par" step="1" value="{{ tour.par if tour else '' }}" required></label><br>
         <label>Slope <input type="number" name="slope" step="1" value="{{ tour.slope if tour else '' }}" required></label><br>
-        <label>SSS <input type="number" name="sss" step="1" value="{{ tour.sss if tour else '' }}" required></label><br>
+        <label>SSS <input type="number" name="sss" step="0.1" value="{{ tour.sss if tour else '' }}" required></label><br>
         <h2>Par par trou</h2>
         <table>
             <thead>

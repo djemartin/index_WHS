@@ -28,7 +28,7 @@ def manage_golf():
             'par': request.form.get('par', type=int),
             'tees': request.form.get('tees'),
             'slope': request.form.get('slope', type=int),
-            'sss': request.form.get('sss', type=int)
+            'sss': request.form.get('sss', type=float)
         }
         if form_id:
             golfs_table.update(data, doc_ids=[form_id])
@@ -59,7 +59,7 @@ def add_tour():
             'golf_id': request.form.get('golf', type=int),
             'par': request.form.get('par', type=int),
             'slope': request.form.get('slope', type=int),
-            'sss': request.form.get('sss', type=int),
+            'sss': request.form.get('sss', type=float),
             'pars': pars,
         }
         if form_id:
