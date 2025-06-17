@@ -21,9 +21,9 @@ def add_tour():
         tour = {
             'name': request.form.get('name'),
             'golf': request.form.get('golf'),
-            'par': request.form.get('par'),
-            'slope': request.form.get('slope'),
-            'sss': request.form.get('sss'),
+            'par': request.form.get('par', type=int),
+            'slope': request.form.get('slope', type=int),
+            'sss': request.form.get('sss', type=int),
             'pars': pars,
         }
         tours_table.insert(tour)

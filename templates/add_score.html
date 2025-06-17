@@ -31,11 +31,11 @@
                 <tr>
                     <td>{{ i }}</td>
                     <td>{{ tour.pars[i-1] }}</td>
-                    <td><input type="number" name="strokes_{{ i }}" required></td>
+                    <td><input type="number" name="strokes_{{ i }}" step="1" required></td>
                     <td><input type="checkbox" name="fairway_{{ i }}"></td>
                     <td><input type="checkbox" name="gir_{{ i }}"></td>
-                    <td><input type="number" name="putts_{{ i }}" required></td>
-                    <td><input type="number" name="given_{{ i }}" required></td>
+                    <td><input type="number" name="putts_{{ i }}" step="1" required></td>
+                    <td><input type="number" name="given_{{ i }}" step="1" required></td>
                 </tr>
                 {% endfor %}
             </tbody>
