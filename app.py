@@ -91,6 +91,9 @@ def add_score(tour_id):
     tour = tours_table.get(doc_id=tour_id)
     if not tour:
         return redirect(url_for('index'))
+    # Retrieve existing score for this tour if any
+    Score = Query()
+    existing_score = scores_table.get(Score.tour_id == tour_id)
     if request.method == 'POST':
         holes = []
         for i in range(1, 19):
@@ -115,7 +118,11 @@ def add_score(tour_id):
             'tour_id': tour_id,
             'holes': holes
         }
-        scores_table.insert(score)
+        # Insert or update the score so data is persisted
+        if existing_score:
+            scores_table.update(score, doc_ids=[existing_score.doc_id])
+        else:
+            scores_table.insert(score)
 
         fairway_possible = sum(1 for h in holes if h['par'] != 3)
         fairway_hits = sum(1 for h in holes if h['par'] != 3 and h['fairway'])
@@ -133,7 +140,7 @@ def add_score(tour_id):
         return render_template('score_summary.html', stats=stats)
     if 'pars' not in tour:
         tour['pars'] = [4] * 18
-    return render_template('add_score.html', tour=tour)
+    return render_template('add_score.html', tour=tour, score=existing_score)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
