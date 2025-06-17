@@ -9,6 +9,7 @@ db = TinyDB(DB_PATH)
 
 tours_table = db.table('tours')
 scores_table = db.table('scores')
+stats_table = db.table('stats')
 golfs_table = db.table('golfs')
 
 @app.route('/')
@@ -121,8 +122,9 @@ def add_score(tour_id):
         # Insert or update the score so data is persisted
         if existing_score:
             scores_table.update(score, doc_ids=[existing_score.doc_id])
+            score_id = existing_score.doc_id
         else:
-            scores_table.insert(score)
+            score_id = scores_table.insert(score)
 
         fairway_possible = sum(1 for h in holes if h['par'] != 3)
         fairway_hits = sum(1 for h in holes if h['par'] != 3 and h['fairway'])
@@ -136,6 +138,23 @@ def add_score(tour_id):
             'putts_avg': avg_putts,
             'gir': f"{gir_hits}/18"
         }
+
+        # Persist stats in dedicated table
+        stats_data = {
+            'score_id': score_id,
+            'tour_id': tour_id,
+            'fairway_hits': fairway_hits,
+            'fairway_possible': fairway_possible,
+            'gir_hits': gir_hits,
+            'putts_total': total_putts,
+            'putts_avg': avg_putts,
+        }
+        Stats = Query()
+        existing_stats = stats_table.get(Stats.score_id == score_id)
+        if existing_stats:
+            stats_table.update(stats_data, doc_ids=[existing_stats.doc_id])
+        else:
+            stats_table.insert(stats_data)
 
         return render_template('score_summary.html', stats=stats)
     if 'pars' not in tour:

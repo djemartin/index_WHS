@@ -8,6 +8,7 @@ Key features:
 - Manage golf courses (name, course, par, slope and SSS).
 - Input scores for each hole of a tour.
 - View, edit and delete existing tours from the home page.
+- Statistics for each scorecard are stored in their own TinyDB index.
 
 Install dependencies with:
 ```
