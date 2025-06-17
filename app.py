@@ -95,13 +95,20 @@ def add_score(tour_id):
         holes = []
         for i in range(1, 19):
             par = request.form.get(f'par_{i}', type=int)
+            strokes = request.form.get(f'strokes_{i}', type=int)
+            given = request.form.get(f'given_{i}', type=int)
+            adjusted = request.form.get(f'adjusted_{i}', type=int)
+            if adjusted is None and par is not None and strokes is not None and given is not None:
+                limit = par + 2 + given
+                adjusted = min(strokes, limit)
             hole = {
                 'par': par,
-                'strokes': request.form.get(f'strokes_{i}', type=int),
+                'strokes_given': given,
+                'strokes': strokes,
+                'adjusted': adjusted,
                 'fairway': bool(request.form.get(f'fairway_{i}')),
                 'gir': bool(request.form.get(f'gir_{i}')),
-                'putts': request.form.get(f'putts_{i}', type=int),
-                'strokes_given': request.form.get(f'given_{i}', type=int)
+                'putts': request.form.get(f'putts_{i}', type=int)
             }
             holes.append(hole)
         score = {
