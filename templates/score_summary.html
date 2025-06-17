@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">Accueil</a>
+    </nav>
+</header>
+<main>
+    <h1>Statistiques du tour</h1>
+    <p>Fairways touchés : {{ stats.fairway }}</p>
+    <p>Nombre total de putts : {{ stats.putts_total }} (moyenne {{ stats.putts_avg }})</p>
+    <p>Greens en régulation : {{ stats.gir }}</p>
+    <a href="/">Retour à l'accueil</a>
+</main>
+</body>
+</html>
