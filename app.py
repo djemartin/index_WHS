@@ -52,7 +52,14 @@ def add_tour():
         tours_table.insert(tour)
         return redirect(url_for('index'))
     golfs = golfs_table.all()
-    return render_template('add_tour.html', golfs=golfs)
+    # Include doc_id in JSON data so the client side can easily
+    # look up additional information for a selected course
+    golfs_json = []
+    for g in golfs:
+        data = dict(g)
+        data['doc_id'] = g.doc_id
+        golfs_json.append(data)
+    return render_template('add_tour.html', golfs=golfs, golfs_json=golfs_json)
 
 @app.route('/add_score/<int:tour_id>', methods=['GET', 'POST'])
 def add_score(tour_id):
