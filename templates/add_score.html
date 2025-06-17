@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Saisir Score</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">Accueil</a>
+    </nav>
+</header>
+<main>
+    <h1>Saisir Score pour {{ tour.name }}</h1>
+    <form method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Trou</th>
+                    <th>Coups</th>
+                    <th>Fairway</th>
+                    <th>Green en régulation</th>
+                    <th>Putt</th>
+                    <th>Coups rendus</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(1, 19) %}
+                <tr>
+                    <td>{{ i }}</td>
+                    <td><input type="number" name="strokes_{{ i }}" required></td>
+                    <td><input type="checkbox" name="fairway_{{ i }}"></td>
+                    <td><input type="checkbox" name="gir_{{ i }}"></td>
+                    <td><input type="number" name="putts_{{ i }}" required></td>
+                    <td><input type="number" name="given_{{ i }}" required></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Enregistrer</button>
+    </form>
+</main>
+</body>
+</html>
