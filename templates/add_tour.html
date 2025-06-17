@@ -16,9 +16,9 @@
     <form method="post">
         <label>Nom du Tour <input type="text" name="name" required></label><br>
         <label>Golf joué <input type="text" name="golf" required></label><br>
-        <label>Par du parcours <input type="number" name="par" required></label><br>
-        <label>Slope <input type="number" name="slope" required></label><br>
-        <label>SSS <input type="number" name="sss" required></label><br>
+        <label>Par du parcours <input type="number" name="par" step="1" required></label><br>
+        <label>Slope <input type="number" name="slope" step="1" required></label><br>
+        <label>SSS <input type="number" name="sss" step="1" required></label><br>
         <h2>Par par trou</h2>
         <table>
             <thead>
@@ -31,7 +31,7 @@
                 {% for i in range(1, 19) %}
                 <tr>
                     <td>{{ i }}</td>
-                    <td><input type="number" name="par_{{ i }}" required></td>
+                    <td><input type="number" name="par_{{ i }}" step="1" required></td>
                 </tr>
                 {% endfor %}
             </tbody>
