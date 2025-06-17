@@ -14,20 +14,35 @@
 </header>
 <main>
     <h1>Liste des Tours</h1>
-    <ul>
-        {% for tour in tours %}
-        <li>
-            {{ tour.name }}
-            {% set g = golfs.get(tour.golf_id) %}
-            {% if g %}
-                ({{ g.name }})
-            {% endif %}
-             - <a href="/add_score/{{ tour.doc_id }}">Saisir Score</a>
-        </li>
-        {% else %}
-        <li>Aucun tour enregistré.</li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Golf</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tour in tours %}
+            <tr>
+                <td>{{ tour.name }}</td>
+                <td>
+                    {% set g = golfs.get(tour.golf_id) %}
+                    {{ g.name if g }}
+                </td>
+                <td>
+                    <a href="{{ url_for('add_tour', id=tour.doc_id) }}">Modifier</a>
+                    <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Supprimer ce tour ?');">Supprimer</button>
+                    </form>
+                    <a href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Saisir Score</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3">Aucun tour enregistré.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </main>
 </body>
 </html>

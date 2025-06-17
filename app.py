@@ -49,7 +49,10 @@ def delete_golf(golf_id):
 
 @app.route('/add_tour', methods=['GET', 'POST'])
 def add_tour():
+    """Create or update a tour."""
+    tour_id = request.args.get('id', type=int)
     if request.method == 'POST':
+        form_id = request.form.get('id', type=int)
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         tour = {
             'name': request.form.get('name'),
@@ -59,8 +62,13 @@ def add_tour():
             'sss': request.form.get('sss', type=int),
             'pars': pars,
         }
-        tours_table.insert(tour)
+        if form_id:
+            tours_table.update(tour, doc_ids=[form_id])
+        else:
+            tours_table.insert(tour)
         return redirect(url_for('index'))
+
+    tour = tours_table.get(doc_id=tour_id) if tour_id else None
     golfs = golfs_table.all()
     # Include doc_id in JSON data so the client side can easily
     # look up additional information for a selected course
@@ -69,7 +77,14 @@ def add_tour():
         data = dict(g)
         data['doc_id'] = g.doc_id
         golfs_json.append(data)
-    return render_template('add_tour.html', golfs=golfs, golfs_json=golfs_json)
+    return render_template('add_tour.html', tour=tour, golfs=golfs, golfs_json=golfs_json)
+
+
+@app.route('/tour/delete/<int:tour_id>', methods=['POST'])
+def delete_tour(tour_id):
+    """Delete a tour from the database."""
+    tours_table.remove(doc_ids=[tour_id])
+    return redirect(url_for('index'))
 
 @app.route('/add_score/<int:tour_id>', methods=['GET', 'POST'])
 def add_score(tour_id):
