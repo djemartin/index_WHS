@@ -30,10 +30,10 @@
                 {% for i in range(1, 19) %}
                 <tr>
                     <td>{{ i }}</td>
-                    <td>{{ tour.pars[i-1] }}</td>
+                    <td><input type="number" name="par_{{ i }}" id="par_{{ i }}" min="3" max="5" step="1" value="{{ tour.pars[i-1] }}" required></td>
                     <td><input type="number" name="strokes_{{ i }}" step="1" required></td>
-                    <td><input type="checkbox" name="fairway_{{ i }}"></td>
-                    <td><input type="checkbox" name="gir_{{ i }}"></td>
+                    <td><input type="checkbox" id="fairway_{{ i }}" name="fairway_{{ i }}"></td>
+                    <td><input type="checkbox" name="gir_{{ i }}" id="gir_{{ i }}"></td>
                     <td><input type="number" name="putts_{{ i }}" step="1" required></td>
                     <td><input type="number" name="given_{{ i }}" step="1" required></td>
                 </tr>
@@ -43,5 +43,31 @@
         <button type="submit">Enregistrer</button>
     </form>
 </main>
+<script>
+function updateFairway(i){
+    var parInput = document.getElementById('par_' + i);
+    var fairway = document.getElementById('fairway_' + i);
+    if(parInput && fairway){
+        if(parInput.value == '3'){
+            fairway.checked = false;
+            fairway.disabled = true;
+        } else {
+            fairway.disabled = false;
+        }
+    }
+}
+document.addEventListener('DOMContentLoaded', function(){
+    for(var i = 1; i <= 18; i++){
+        updateFairway(i);
+        var p = document.getElementById('par_' + i);
+        if(p){
+            p.addEventListener('input', function(e){
+                var index = this.id.split('_')[1];
+                updateFairway(index);
+            });
+        }
+    }
+});
+</script>
 </body>
 </html>

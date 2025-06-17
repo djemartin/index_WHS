@@ -38,19 +38,36 @@ def add_score(tour_id):
     if request.method == 'POST':
         holes = []
         for i in range(1, 19):
-            holes.append({
+            par = request.form.get(f'par_{i}', type=int)
+            hole = {
+                'par': par,
                 'strokes': request.form.get(f'strokes_{i}', type=int),
                 'fairway': bool(request.form.get(f'fairway_{i}')),
                 'gir': bool(request.form.get(f'gir_{i}')),
                 'putts': request.form.get(f'putts_{i}', type=int),
                 'strokes_given': request.form.get(f'given_{i}', type=int)
-            })
+            }
+            holes.append(hole)
         score = {
             'tour_id': tour_id,
             'holes': holes
         }
         scores_table.insert(score)
-        return redirect(url_for('index'))
+
+        fairway_possible = sum(1 for h in holes if h['par'] != 3)
+        fairway_hits = sum(1 for h in holes if h['par'] != 3 and h['fairway'])
+        gir_hits = sum(1 for h in holes if h['gir'])
+        total_putts = sum(h['putts'] for h in holes)
+        avg_putts = format(total_putts / 18, '.1f')
+
+        stats = {
+            'fairway': f"{fairway_hits}/{fairway_possible}",
+            'putts_total': total_putts,
+            'putts_avg': avg_putts,
+            'gir': f"{gir_hits}/18"
+        }
+
+        return render_template('score_summary.html', stats=stats)
     if 'pars' not in tour:
         tour['pars'] = [4] * 18
     return render_template('add_score.html', tour=tour)
