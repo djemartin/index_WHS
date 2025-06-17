@@ -18,8 +18,8 @@ def index():
 
 @app.route('/golf', methods=['GET', 'POST'])
 def manage_golf():
+    """Create or update a golf and display the list of existing ones."""
     golf_id = request.args.get('id', type=int)
-    golf = golfs_table.get(doc_id=golf_id) if golf_id else None
     if request.method == 'POST':
         form_id = request.form.get('id', type=int)
         data = {
@@ -34,8 +34,18 @@ def manage_golf():
             golfs_table.update(data, doc_ids=[form_id])
         else:
             golfs_table.insert(data)
-        return redirect(url_for('add_tour'))
-    return render_template('golf_form.html', golf=golf)
+        return redirect(url_for('manage_golf'))
+
+    golf = golfs_table.get(doc_id=golf_id) if golf_id else None
+    golfs = golfs_table.all()
+    return render_template('golf_form.html', golf=golf, golfs=golfs)
+
+
+@app.route('/golf/delete/<int:golf_id>', methods=['POST'])
+def delete_golf(golf_id):
+    """Delete a golf from the database."""
+    golfs_table.remove(doc_ids=[golf_id])
+    return redirect(url_for('manage_golf'))
 
 @app.route('/add_tour', methods=['GET', 'POST'])
 def add_tour():
