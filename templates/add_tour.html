@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Ajouter un Tour</title>
+    <title>{% if tour %}Modifier le Tour{% else %}Ajouter un Tour{% endif %}</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
@@ -13,21 +13,24 @@
     </nav>
 </header>
 <main>
-    <h1>Ajouter un Tour</h1>
+    <h1>{% if tour %}Modifier le Tour{% else %}Ajouter un Tour{% endif %}</h1>
     <form method="post">
-        <label>Nom du Tour <input type="text" name="name" required></label><br>
+        {% if tour %}
+        <input type="hidden" name="id" value="{{ tour.doc_id }}">
+        {% endif %}
+        <label>Nom du Tour <input type="text" name="name" value="{{ tour.name if tour else '' }}" required></label><br>
         <label>Golf joué 
             <select name="golf" id="golf_select" required>
                 <option value="">--Choisir--</option>
                 {% for g in golfs %}
-                <option value="{{ g.doc_id }}">{{ g.name }}</option>
+                <option value="{{ g.doc_id }}" {% if tour and tour.golf_id == g.doc_id %}selected{% endif %}>{{ g.name }}</option>
                 {% endfor %}
             </select>
             <a href="/golf">+</a>
         </label><br>
-        <label>Par du parcours <input type="number" name="par" step="1" required></label><br>
-        <label>Slope <input type="number" name="slope" step="1" required></label><br>
-        <label>SSS <input type="number" name="sss" step="1" required></label><br>
+        <label>Par du parcours <input type="number" name="par" step="1" value="{{ tour.par if tour else '' }}" required></label><br>
+        <label>Slope <input type="number" name="slope" step="1" value="{{ tour.slope if tour else '' }}" required></label><br>
+        <label>SSS <input type="number" name="sss" step="1" value="{{ tour.sss if tour else '' }}" required></label><br>
         <h2>Par par trou</h2>
         <table>
             <thead>
@@ -40,12 +43,15 @@
                 {% for i in range(1, 19) %}
                 <tr>
                     <td>{{ i }}</td>
-                    <td><input type="number" name="par_{{ i }}" step="1" required></td>
+                    <td><input type="number" name="par_{{ i }}" step="1" value="{{ tour.pars[i-1] if tour and tour.pars else '' }}" required></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <button type="submit">Enregistrer</button>
+        {% if tour %}
+        <a href="{{ url_for('add_tour') }}">Annuler</a>
+        {% endif %}
     </form>
 </main>
 <script>
