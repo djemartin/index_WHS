@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>WHS Golf</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/add_tour">Ajouter un Tour</a>
+    </nav>
+</header>
+<main>
+    <h1>Liste des Tours</h1>
+    <ul>
+        {% for tour in tours %}
+        <li>
+            {{ tour.name }} - <a href="/add_score/{{ tour.doc_id }}">Saisir Score</a>
+        </li>
+        {% else %}
+        <li>Aucun tour enregistré.</li>
+        {% endfor %}
+    </ul>
+</main>
+</body>
+</html>
