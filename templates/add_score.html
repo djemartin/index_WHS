@@ -15,6 +15,9 @@
 <main>
     <h1>Saisir Score pour {{ tour.name }}</h1>
     <form method="post">
+        {% if score %}
+        <input type="hidden" name="id" value="{{ score.doc_id }}">
+        {% endif %}
         <table>
             <thead>
                 <tr>
@@ -28,43 +31,43 @@
                 <tr>
                     <th>Par</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="number" name="par_{{ i }}" id="par_{{ i }}" step="1" value="{{ tour.pars[i-1] }}" required></td>
+                    <td><input type="number" name="par_{{ i }}" id="par_{{ i }}" step="1" value="{{ score.holes[i-1].par if score else tour.pars[i-1] }}" required></td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th>Coups reçus</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="number" name="given_{{ i }}" id="given_{{ i }}" step="1" required></td>
+                    <td><input type="number" name="given_{{ i }}" id="given_{{ i }}" step="1" value="{{ score.holes[i-1].strokes_given if score else '' }}" required></td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th>Score</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="number" name="strokes_{{ i }}" id="strokes_{{ i }}" step="1" required></td>
+                    <td><input type="number" name="strokes_{{ i }}" id="strokes_{{ i }}" step="1" value="{{ score.holes[i-1].strokes if score else '' }}" required></td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th>Score brut ajusté</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="number" name="adjusted_{{ i }}" id="adjusted_{{ i }}" readonly></td>
+                    <td><input type="number" name="adjusted_{{ i }}" id="adjusted_{{ i }}" value="{{ score.holes[i-1].adjusted if score else '' }}" readonly></td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th>Fairway touché</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="checkbox" id="fairway_{{ i }}" name="fairway_{{ i }}"></td>
+                    <td><input type="checkbox" id="fairway_{{ i }}" name="fairway_{{ i }}" {% if score and score.holes[i-1].fairway %}checked{% endif %}></td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th>Green en régulation</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="checkbox" name="gir_{{ i }}" id="gir_{{ i }}"></td>
+                    <td><input type="checkbox" name="gir_{{ i }}" id="gir_{{ i }}" {% if score and score.holes[i-1].gir %}checked{% endif %}></td>
                     {% endfor %}
                 </tr>
                 <tr>
                     <th>Nb de Putts</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="number" name="putts_{{ i }}" id="putts_{{ i }}" step="1" required></td>
+                    <td><input type="number" name="putts_{{ i }}" id="putts_{{ i }}" step="1" value="{{ score.holes[i-1].putts if score else '' }}" required></td>
                     {% endfor %}
                 </tr>
             </tbody>
