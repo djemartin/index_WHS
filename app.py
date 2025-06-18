@@ -44,12 +44,14 @@ def start_score():
         golf_id = request.form.get('golf', type=int)
         name = request.form.get('name')
         jour = request.form.get('jour', type=int)
+        date = request.form.get('date')
         golf = golfs_table.get(doc_id=golf_id)
         if golf:
             pars = golf.get('pars', [4] * 18)
             tour = {
                 'name': name,
                 'jour': jour,
+                'date': date,
                 'golf_id': golf_id,
                 'par': golf.get('par'),
                 'slope': golf.get('slope'),
@@ -106,6 +108,7 @@ def add_tour():
         tour = {
             'name': request.form.get('name'),
             'jour': request.form.get('jour', type=int),
+            'date': request.form.get('date'),
             'golf_id': request.form.get('golf', type=int),
             'par': request.form.get('par', type=int),
             'slope': request.form.get('slope', type=int),
