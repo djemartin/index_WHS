@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques Globales</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">Accueil</a>
+        <a href="/golf">Gérer les Golfs</a>
+    </nav>
+</header>
+<main>
+    <h1>Statistiques Globales</h1>
+    <p>Moyenne des putts : {{ stats.avg_putts }}</p>
+    <p>Moyenne des scores : {{ stats.avg_score }}</p>
+    <p>Moyenne des fairways touchés : {{ stats.avg_fairways }}</p>
+    <p>Nombre total de GIR : {{ stats.total_gir }}</p>
+    <p>Moyenne du SBA : {{ stats.avg_sba }}</p>
+</main>
+</body>
+</html>
