@@ -222,12 +222,16 @@ def overall_stats():
         total_sba += sum((h.get('adjusted') if h.get('adjusted') is not None else 0) for h in holes)
 
     avg_putts = format(total_putts / num_cards, '.1f') if num_cards else '0.0'
+    avg_putts_cards = (
+        format(total_putts / (num_cards * 18), '.1f') if num_cards else '0.0'
+    )
     avg_score = format(total_scores / num_cards, '.1f') if num_cards else '0.0'
     avg_fairways = format(total_fairway_hits / num_cards, '.1f') if num_cards else '0.0'
     avg_sba = format(total_sba / num_cards, '.1f') if num_cards else '0.0'
 
     stats = {
         'avg_putts': avg_putts,
+        'avg_putts_cards': avg_putts_cards,
         'avg_score': avg_score,
         'avg_fairways': avg_fairways,
         'total_gir': total_gir_hits,
