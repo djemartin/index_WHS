@@ -212,6 +212,7 @@ def overall_stats():
 
     total_putts = sum(s.get('putts_total', 0) for s in stats_entries)
     total_fairway_hits = sum(s.get('fairway_hits', 0) for s in stats_entries)
+    total_fairway_possible = sum(s.get('fairway_possible', 0) for s in stats_entries)
     total_gir_hits = sum(s.get('gir_hits', 0) for s in stats_entries)
 
     total_scores = 0
@@ -229,12 +230,23 @@ def overall_stats():
     avg_fairways = format(total_fairway_hits / num_cards, '.1f') if num_cards else '0.0'
     avg_sba = format(total_sba / num_cards, '.1f') if num_cards else '0.0'
 
+    fairway_pct = (
+        format(total_fairway_hits / total_fairway_possible * 100, '.1f')
+        if total_fairway_possible else '0.0'
+    )
+    gir_possible = num_cards * 18
+    gir_pct = (
+        format(total_gir_hits / gir_possible * 100, '.1f')
+        if gir_possible else '0.0'
+    )
+
     stats = {
         'avg_putts': avg_putts,
         'avg_putts_cards': avg_putts_cards,
         'avg_score': avg_score,
         'avg_fairways': avg_fairways,
-        'total_gir': total_gir_hits,
+        'fairway_pct': fairway_pct,
+        'gir_pct': gir_pct,
         'avg_sba': avg_sba,
     }
     return render_template('stats_overall.html', stats=stats)
