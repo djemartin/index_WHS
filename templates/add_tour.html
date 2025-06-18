@@ -22,6 +22,7 @@
         {% endif %}
         <label>Nom du Tour <input type="text" name="name" value="{{ tour.name if tour else '' }}" required></label><br>
         <label>Jour <input type="number" name="jour" step="1" value="{{ tour.get('jour') if tour else '' }}" required></label><br>
+        <label>Date <input type="date" name="date" value="{{ tour.date if tour else '' }}" required></label><br>
         <label>Golf joué
             <select name="golf" id="golf_select" required>
                 <option value="">--Choisir--</option>
