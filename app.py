@@ -192,5 +192,39 @@ def add_score(tour_id):
         tour['pars'] = [4] * 18
     return render_template('add_score.html', tour=tour, score=existing_score)
 
+
+@app.route('/stats')
+def overall_stats():
+    """Display aggregate statistics for all scorecards."""
+    stats_entries = stats_table.all()
+    score_entries = scores_table.all()
+
+    num_cards = len(score_entries)
+
+    total_putts = sum(s.get('putts_total', 0) for s in stats_entries)
+    total_fairway_hits = sum(s.get('fairway_hits', 0) for s in stats_entries)
+    total_gir_hits = sum(s.get('gir_hits', 0) for s in stats_entries)
+
+    total_scores = 0
+    total_sba = 0
+    for s in score_entries:
+        holes = s.get('holes', [])
+        total_scores += sum(h.get('strokes', 0) for h in holes)
+        total_sba += sum((h.get('adjusted') if h.get('adjusted') is not None else 0) for h in holes)
+
+    avg_putts = format(total_putts / num_cards, '.1f') if num_cards else '0.0'
+    avg_score = format(total_scores / num_cards, '.1f') if num_cards else '0.0'
+    avg_fairways = format(total_fairway_hits / num_cards, '.1f') if num_cards else '0.0'
+    avg_sba = format(total_sba / num_cards, '.1f') if num_cards else '0.0'
+
+    stats = {
+        'avg_putts': avg_putts,
+        'avg_score': avg_score,
+        'avg_fairways': avg_fairways,
+        'total_gir': total_gir_hits,
+        'avg_sba': avg_sba,
+    }
+    return render_template('stats_overall.html', stats=stats)
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
