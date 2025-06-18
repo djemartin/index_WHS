@@ -17,6 +17,30 @@ def index():
     golfs = {g.doc_id: g for g in golfs_table.all()}
     return render_template('index.html', tours=tours_table.all(), golfs=golfs)
 
+@app.route('/start_score', methods=['GET', 'POST'])
+def start_score():
+    """Create a tour with default par data and go directly to score entry."""
+    if request.method == 'POST':
+        golf_id = request.form.get('golf', type=int)
+        name = request.form.get('name')
+        jour = request.form.get('jour', type=int)
+        golf = golfs_table.get(doc_id=golf_id)
+        if golf:
+            pars = golf.get('pars', [4] * 18)
+            tour = {
+                'name': name,
+                'jour': jour,
+                'golf_id': golf_id,
+                'par': golf.get('par'),
+                'slope': golf.get('slope'),
+                'sss': golf.get('sss'),
+                'pars': pars,
+            }
+            tour_id = tours_table.insert(tour)
+            return redirect(url_for('add_score', tour_id=tour_id))
+    golfs = golfs_table.all()
+    return render_template('start_score.html', golfs=golfs)
+
 @app.route('/golf', methods=['GET', 'POST'])
 def manage_golf():
     """Create or update a golf and display the list of existing ones."""
