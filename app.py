@@ -151,7 +151,11 @@ def add_score(tour_id):
             strokes = request.form.get(f'strokes_{i}', type=int)
             given = request.form.get(f'given_{i}', type=int)
             adjusted = request.form.get(f'adjusted_{i}', type=int)
-            if adjusted is None and par is not None and strokes is not None and given is not None:
+
+            # Always recompute the adjusted score on the backend to
+            # ensure it is available even if the client-side script did
+            # not populate the value.
+            if par is not None and strokes is not None and given is not None:
                 limit = par + 2 + given
                 adjusted = min(strokes, limit)
             hole = {
