@@ -187,6 +187,15 @@ def add_score(tour_id):
         else:
             stats_table.insert(stats_data)
 
+        # Calculate average putts per card across all recorded cards
+        stats_entries = stats_table.all()
+        num_cards_overall = len(stats_entries)
+        if num_cards_overall:
+            avg_putts_cards = sum(s.get('putts_total', 0) / 18 for s in stats_entries) / num_cards_overall
+            stats['putts_avg_cards'] = format(avg_putts_cards, '.1f')
+        else:
+            stats['putts_avg_cards'] = '0.0'
+
         return render_template('score_summary.html', stats=stats)
     if 'pars' not in tour:
         tour['pars'] = [4] * 18
