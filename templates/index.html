@@ -34,7 +34,7 @@
                     {{ g.name if g }}
                 </td>
                 <td>
-                    <a href="{{ url_for('add_tour', id=tour.doc_id) }}">Modifier</a>
+                    <a href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Modifier</a>
                     <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" style="display:inline;">
                         <button type="submit" onclick="return confirm('Supprimer ce tour ?');">Supprimer</button>
                     </form>
