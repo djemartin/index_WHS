@@ -217,10 +217,18 @@ def overall_stats():
 
     total_scores = 0
     total_sba = 0
+    total_pars = 0
     for s in score_entries:
         holes = s.get('holes', [])
         total_scores += sum(h.get('strokes', 0) for h in holes)
         total_sba += sum((h.get('adjusted') if h.get('adjusted') is not None else 0) for h in holes)
+        tour_id = s.get('tour_id')
+        tour = tours_table.get(doc_id=tour_id) if tour_id else None
+        if tour:
+            par_total = tour.get('par') or sum(tour.get('pars', []))
+        else:
+            par_total = sum(h.get('par', 0) for h in holes)
+        total_pars += par_total
 
     avg_putts = format(total_putts / num_cards, '.1f') if num_cards else '0.0'
     avg_putts_cards = (
@@ -228,7 +236,8 @@ def overall_stats():
     )
     avg_score = format(total_scores / num_cards, '.1f') if num_cards else '0.0'
     avg_fairways = format(total_fairway_hits / num_cards, '.1f') if num_cards else '0.0'
-    avg_sba = format(total_sba / num_cards, '.1f') if num_cards else '0.0'
+    avg_sba = format(total_sba / (num_cards * 18), '.1f') if num_cards else '0.0'
+    avg_nb_coups = format(total_scores / total_pars, '.1f') if total_pars else '0.0'
 
     fairway_pct = (
         format(total_fairway_hits / total_fairway_possible * 100, '.1f')
@@ -248,6 +257,7 @@ def overall_stats():
         'fairway_pct': fairway_pct,
         'gir_pct': gir_pct,
         'avg_sba': avg_sba,
+        'avg_nb_coups': avg_nb_coups,
     }
     return render_template('stats_overall.html', stats=stats)
 
