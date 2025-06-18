@@ -63,6 +63,14 @@
         document.querySelector('input[name="par"]').value = g.par;
         document.querySelector('input[name="slope"]').value = g.slope;
         document.querySelector('input[name="sss"]').value = g.sss;
+        if(g.pars){
+            for(let i=1; i<=18; i++){
+                const field = document.querySelector(`input[name="par_${i}"]`);
+                if(field){
+                    field.value = g.pars[i-1];
+                }
+            }
+        }
     }
     document.addEventListener('DOMContentLoaded', function(){
         const select = document.getElementById('golf_select');
