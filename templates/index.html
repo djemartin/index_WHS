@@ -11,6 +11,7 @@
         <a href="/add_tour">Ajouter un Tour</a>
         <a href="/start_score">Nouvelle Carte</a>
         <a href="/golf">Gérer les Golfs</a>
+        <a href="/scores">Cartes</a>
         <a href="/stats">Statistiques</a>
     </nav>
 </header>
@@ -22,6 +23,8 @@
                 <th>Nom</th>
                 <th>Jour</th>
                 <th>Golf</th>
+                <th>Total Score</th>
+                <th>Total SBA</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -34,6 +37,8 @@
                     {% set g = golfs.get(tour.golf_id) %}
                     {{ g.name if g }}
                 </td>
+                <td>{{ tour.total_score if tour.total_score is not none else '' }}</td>
+                <td>{{ tour.total_sba if tour.total_sba is not none else '' }}</td>
                 <td>
                     <a href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Modifier</a>
                     <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" style="display:inline;">
@@ -43,7 +48,7 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="4">Aucun tour enregistré.</td></tr>
+            <tr><td colspan="6">Aucun tour enregistré.</td></tr>
             {% endfor %}
         </tbody>
     </table>

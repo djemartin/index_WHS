@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cartes enregistrées</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header>
+    <nav>
+        <a href="/">Accueil</a>
+        <a href="/golf">Gérer les Golfs</a>
+        <a href="/scores">Cartes</a>
+        <a href="/stats">Statistiques</a>
+    </nav>
+</header>
+<main>
+    <h1>Cartes enregistrées</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Jour</th>
+                <th>Golf</th>
+                <th>Total Score</th>
+                <th>Total SBA</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in cards %}
+            <tr>
+                <td>{{ c.tour.name }}</td>
+                <td>{{ c.tour.get('jour') }}</td>
+                <td>{{ c.golf.name if c.golf }}</td>
+                <td>{{ c.total_score }}</td>
+                <td>{{ c.total_sba }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Aucune carte enregistrée.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

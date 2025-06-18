@@ -15,7 +15,25 @@ golfs_table = db.table('golfs')
 @app.route('/')
 def index():
     golfs = {g.doc_id: g for g in golfs_table.all()}
-    return render_template('index.html', tours=tours_table.all(), golfs=golfs)
+    scores = {s['tour_id']: s for s in scores_table.all()}
+    tours = []
+    for t in tours_table.all():
+        score_entry = scores.get(t.doc_id)
+        total_score = None
+        total_sba = None
+        if score_entry:
+            holes = score_entry.get('holes', [])
+            total_score = sum(h.get('strokes', 0) for h in holes)
+            total_sba = sum(
+                (h.get('adjusted') if h.get('adjusted') is not None else 0)
+                for h in holes
+            )
+        tour_data = dict(t)
+        tour_data['doc_id'] = t.doc_id
+        tour_data['total_score'] = total_score
+        tour_data['total_sba'] = total_sba
+        tours.append(tour_data)
+    return render_template('index.html', tours=tours, golfs=golfs)
 
 @app.route('/start_score', methods=['GET', 'POST'])
 def start_score():
@@ -200,6 +218,31 @@ def add_score(tour_id):
     if 'pars' not in tour:
         tour['pars'] = [4] * 18
     return render_template('add_score.html', tour=tour, score=existing_score)
+
+
+@app.route('/scores')
+def list_scores():
+    """Display the list of recorded scorecards."""
+    golfs = {g.doc_id: g for g in golfs_table.all()}
+    tours = {t.doc_id: t for t in tours_table.all()}
+    cards = []
+    for s in scores_table.all():
+        tour = tours.get(s.get('tour_id'))
+        if not tour:
+            continue
+        holes = s.get('holes', [])
+        total_score = sum(h.get('strokes', 0) for h in holes)
+        total_sba = sum(
+            (h.get('adjusted') if h.get('adjusted') is not None else 0)
+            for h in holes
+        )
+        cards.append({
+            'tour': tour,
+            'golf': golfs.get(tour.get('golf_id')),
+            'total_score': total_score,
+            'total_sba': total_sba,
+        })
+    return render_template('scores_list.html', cards=cards)
 
 
 @app.route('/stats')
