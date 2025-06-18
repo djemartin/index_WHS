@@ -201,7 +201,10 @@ def overall_stats():
 
     num_cards = len(score_entries)
 
-    total_putts = sum(s.get('putts_total', 0) for s in stats_entries)
+    total_putts = 0
+    for s in score_entries:
+        holes = s.get('holes', [])
+        total_putts += sum(h.get('putts', 0) for h in holes if h.get('putts') is not None)
     total_fairway_hits = sum(s.get('fairway_hits', 0) for s in stats_entries)
     total_gir_hits = sum(s.get('gir_hits', 0) for s in stats_entries)
 
