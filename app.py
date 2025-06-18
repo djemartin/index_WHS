@@ -17,7 +17,9 @@ def index():
     golfs = {g.doc_id: g for g in golfs_table.all()}
     scores = {s['tour_id']: s for s in scores_table.all()}
     tours = []
-    for t in tours_table.all():
+    # Sort tours by doc_id descending so the most recent tour
+    # appears first on the main page
+    for t in sorted(tours_table.all(), key=lambda x: x.doc_id, reverse=True):
         score_entry = scores.get(t.doc_id)
         total_score = None
         total_sba = None
