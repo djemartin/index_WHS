@@ -25,6 +25,23 @@
         <label>Slope <input type="number" name="slope" step="1" value="{{ golf.slope if golf else '' }}" required></label><br>
         <!-- SSS may be decimal so allow fractional numbers -->
         <label>SSS <input type="number" name="sss" step="0.1" value="{{ golf.sss if golf else '' }}" required></label><br>
+        <h2>Par par trou</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Trou</th>
+                    <th>Par</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(1, 19) %}
+                <tr>
+                    <td>{{ i }}</td>
+                    <td><input type="number" name="par_{{ i }}" step="1" value="{{ golf.pars[i-1] if golf and golf.pars else '' }}" required></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <button type="submit">Enregistrer</button>
         {% if golf %}
         <a href="{{ url_for('manage_golf') }}">Annuler</a>

@@ -23,13 +23,15 @@ def manage_golf():
     golf_id = request.args.get('id', type=int)
     if request.method == 'POST':
         form_id = request.form.get('id', type=int)
+        pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         data = {
             'name': request.form.get('name'),
             'course': request.form.get('course'),
             'par': request.form.get('par', type=int),
             'tees': request.form.get('tees'),
             'slope': request.form.get('slope', type=int),
-            'sss': request.form.get('sss', type=float)
+            'sss': request.form.get('sss', type=float),
+            'pars': pars,
         }
         if form_id:
             golfs_table.update(data, doc_ids=[form_id])
@@ -38,6 +40,8 @@ def manage_golf():
         return redirect(url_for('manage_golf'))
 
     golf = golfs_table.get(doc_id=golf_id) if golf_id else None
+    if golf and 'pars' not in golf:
+        golf['pars'] = [4] * 18
     golfs = golfs_table.all()
     return render_template('golf_form.html', golf=golf, golfs=golfs)
 
@@ -77,6 +81,8 @@ def add_tour():
     golfs_json = []
     for g in golfs:
         data = dict(g)
+        if 'pars' not in data:
+            data['pars'] = [4] * 18
         data['doc_id'] = g.doc_id
         golfs_json.append(data)
     return render_template('add_tour.html', tour=tour, golfs=golfs, golfs_json=golfs_json)
