@@ -42,9 +42,20 @@ def calculate_sba(pars, strokes, handicap, hcps):
     return total_sba, adjusted, given
 
 
-def diff_whs(sba_total, slope, sss, par, pcc=0):
-    """Calculate the WHS differential for a card including PCC."""
-    return ((sba_total - sss - pcc) / slope) * 113 + (sss - par)
+def diff_whs(sba_total, slope, sss, pcc=0):
+    """Calculate the WHS differential for a card.
+
+    The PCC value is always subtracted from the differential, so a PCC of
+    ``+1`` will decrease the differential by 1 and a PCC of ``-1`` will
+    increase it by 1. The result is rounded **up** to the next tenth as
+    required by the WHS specification.
+    """
+
+    import math
+
+    diff = ((sba_total - sss) / slope) * 113 - pcc
+    # Round up to the next tenth (e.g. 19.21 -> 19.3)
+    return math.ceil(diff * 10) / 10
 
 @app.route('/')
 def index():
@@ -68,11 +79,9 @@ def index():
             continue
         slope = tour.get('slope')
         sss = tour.get('sss')
-        par = tour.get('par')
         pcc = tour.get('pcc', 0)
-        if slope and sss is not None and par is not None:
-            diff = diff_whs(total_sba_val, slope, sss, par, pcc)
-            diff = round(diff, 1)
+        if slope and sss is not None:
+            diff = diff_whs(total_sba_val, slope, sss, pcc)
             diffs.append((diff, s.get('tour_id')))
     min_diff = None
     highlight_ids = set()
@@ -97,11 +106,10 @@ def index():
             total_sba = round(total_sba_val, 1)
             slope = t.get('slope')
             sss = t.get('sss')
-            par = t.get('par')
             pcc = t.get('pcc', 0)
-            if slope and sss is not None and par is not None:
-                diff_value = diff_whs(total_sba_val, slope, sss, par, pcc)
-                diff_whs_val = round(diff_value, 1)
+            if slope and sss is not None:
+                diff_value = diff_whs(total_sba_val, slope, sss, pcc)
+                diff_whs_val = diff_value
             else:
                 diff_whs_val = None
             formatted_sba = format(total_sba_val, '.1f')
@@ -305,10 +313,9 @@ def add_score(tour_id):
         # Compute WHS differential for this card
         slope = tour.get('slope')
         sss = tour.get('sss')
-        par = tour.get('par')
         pcc = tour.get('pcc', 0)
-        if slope and sss is not None and par is not None:
-            diff_value = diff_whs(sum(h['adjusted'] for h in holes), slope, sss, par, pcc)
+        if slope and sss is not None:
+            diff_value = diff_whs(sum(h['adjusted'] for h in holes), slope, sss, pcc)
             stats['diff_whs'] = format(diff_value, '.1f')
 
         # Persist stats in dedicated table
@@ -367,12 +374,11 @@ def list_scores():
         pcc = tour.get('pcc', 0)
         slope = tour.get('slope')
         sss = tour.get('sss')
-        par = tour.get('par')
         diff = None
         emoji = ''
-        if slope and sss is not None and par is not None:
-            diff_value = diff_whs(total_sba, slope, sss, par, pcc)
-            diff = round(diff_value, 1)
+        if slope and sss is not None:
+            diff_value = diff_whs(total_sba, slope, sss, pcc)
+            diff = diff_value
             if current_index is not None:
                 if diff < current_index:
                     emoji = '🔻'
