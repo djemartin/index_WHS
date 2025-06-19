@@ -12,6 +12,35 @@ scores_table = db.table('scores')
 stats_table = db.table('stats')
 golfs_table = db.table('golfs')
 
+
+def distribute_handicap(handicap, hcps):
+    """Return a list with strokes received for each hole."""
+    if handicap is None:
+        handicap = 0
+    base = handicap // 18
+    extra = handicap % 18
+    distribution = [base] * 18
+    for i, hcp in enumerate(hcps):
+        if hcp <= extra:
+            distribution[i] += 1
+    return distribution
+
+
+def calculate_sba(pars, strokes, handicap, hcps):
+    """Compute SBA values and strokes received per hole."""
+    given = distribute_handicap(handicap, hcps)
+    adjusted = []
+    for p, s, g in zip(pars, strokes, given):
+        limit = p + 2 + g
+        adjusted.append(min(s, limit))
+    total_sba = sum(adjusted)
+    return total_sba, adjusted, given
+
+
+def diff_whs(sba_total, slope, sss, par):
+    """Calculate the WHS differential for a card."""
+    return ((sba_total - sss) / slope) * 113 + (sss - par)
+
 @app.route('/')
 def index():
     golfs = {g.doc_id: g for g in golfs_table.all()}
@@ -36,7 +65,7 @@ def index():
         sss = tour.get('sss')
         par = tour.get('par')
         if slope and sss is not None and par is not None:
-            diff = ((total_sba_val - sss) / slope) * 113 + (sss - par)
+            diff = diff_whs(total_sba_val, slope, sss, par)
             diff = round(diff, 1)
             diffs.append((diff, s.get('tour_id')))
     min_diff = None
@@ -64,19 +93,19 @@ def index():
             sss = t.get('sss')
             par = t.get('par')
             if slope and sss is not None and par is not None:
-                diff_value = ((total_sba_val - sss) / slope) * 113 + (sss - par)
-                diff_whs = round(diff_value, 1)
+                diff_value = diff_whs(total_sba_val, slope, sss, par)
+                diff_whs_val = round(diff_value, 1)
             else:
-                diff_whs = None
+                diff_whs_val = None
             formatted_sba = format(total_sba_val, '.1f')
         else:
-            diff_whs = None
+            diff_whs_val = None
             formatted_sba = None
         tour_data = dict(t)
         tour_data['doc_id'] = t.doc_id
         tour_data['total_score'] = total_score
         tour_data['total_sba'] = formatted_sba if formatted_sba is not None else None
-        tour_data['diff_whs'] = diff_whs
+        tour_data['diff_whs'] = diff_whs_val
         tour_data['highlight'] = t.doc_id in highlight_ids
         tours.append(tour_data)
     return render_template('index.html', tours=tours, golfs=golfs)
@@ -92,6 +121,7 @@ def start_score():
         golf = golfs_table.get(doc_id=golf_id)
         if golf:
             pars = golf.get('pars', [4] * 18)
+            hcps = golf.get('hcps', list(range(1, 19)))
             tour = {
                 'name': name,
                 'jour': jour,
@@ -101,6 +131,7 @@ def start_score():
                 'slope': golf.get('slope'),
                 'sss': golf.get('sss'),
                 'pars': pars,
+                'hcps': hcps,
             }
             tour_id = tours_table.insert(tour)
             return redirect(url_for('add_score', tour_id=tour_id))
@@ -114,6 +145,7 @@ def manage_golf():
     if request.method == 'POST':
         form_id = request.form.get('id', type=int)
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
+        hcps = [request.form.get(f'hcp_{i}', type=int) for i in range(1, 19)]
         data = {
             'name': request.form.get('name'),
             'course': request.form.get('course'),
@@ -122,6 +154,7 @@ def manage_golf():
             'slope': request.form.get('slope', type=int),
             'sss': request.form.get('sss', type=float),
             'pars': pars,
+            'hcps': hcps,
         }
         if form_id:
             golfs_table.update(data, doc_ids=[form_id])
@@ -132,6 +165,8 @@ def manage_golf():
     golf = golfs_table.get(doc_id=golf_id) if golf_id else None
     if golf and 'pars' not in golf:
         golf['pars'] = [4] * 18
+    if golf and 'hcps' not in golf:
+        golf['hcps'] = list(range(1, 19))
     golfs = golfs_table.all()
     return render_template('golf_form.html', golf=golf, golfs=golfs)
 
@@ -149,6 +184,7 @@ def add_tour():
     if request.method == 'POST':
         form_id = request.form.get('id', type=int)
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
+        hcps = [request.form.get(f'hcp_{i}', type=int) for i in range(1, 19)]
         tour = {
             'name': request.form.get('name'),
             'jour': request.form.get('jour', type=int),
@@ -158,6 +194,7 @@ def add_tour():
             'slope': request.form.get('slope', type=int),
             'sss': request.form.get('sss', type=float),
             'pars': pars,
+            'hcps': hcps,
         }
         if form_id:
             tours_table.update(tour, doc_ids=[form_id])
@@ -166,6 +203,8 @@ def add_tour():
         return redirect(url_for('index'))
 
     tour = tours_table.get(doc_id=tour_id) if tour_id else None
+    if tour and 'hcps' not in tour:
+        tour['hcps'] = list(range(1, 19))
     golfs = golfs_table.all()
     # Include doc_id in JSON data so the client side can easily
     # look up additional information for a selected course
@@ -174,6 +213,8 @@ def add_tour():
         data = dict(g)
         if 'pars' not in data:
             data['pars'] = [4] * 18
+        if 'hcps' not in data:
+            data['hcps'] = list(range(1, 19))
         data['doc_id'] = g.doc_id
         golfs_json.append(data)
     return render_template('add_tour.html', tour=tour, golfs=golfs, golfs_json=golfs_json)
@@ -194,19 +235,16 @@ def add_score(tour_id):
     Score = Query()
     existing_score = scores_table.get(Score.tour_id == tour_id)
     if request.method == 'POST':
+        handicap = request.form.get('handicap', type=int)
+        hcps = tour.get('hcps', list(range(1, 19)))
+        given_dist = distribute_handicap(handicap, hcps)
         holes = []
         for i in range(1, 19):
             par = request.form.get(f'par_{i}', type=int)
             strokes = request.form.get(f'strokes_{i}', type=int)
-            given = request.form.get(f'given_{i}', type=int)
-            adjusted = request.form.get(f'adjusted_{i}', type=int)
-
-            # Always recompute the adjusted score on the backend to
-            # ensure it is available even if the client-side script did
-            # not populate the value.
-            if par is not None and strokes is not None and given is not None:
-                limit = par + 2 + given
-                adjusted = min(strokes, limit)
+            given = given_dist[i-1]
+            limit = par + 2 + given
+            adjusted = min(strokes, limit) if strokes is not None else None
             hole = {
                 'par': par,
                 'strokes_given': given,
@@ -219,6 +257,7 @@ def add_score(tour_id):
             holes.append(hole)
         score = {
             'tour_id': tour_id,
+            'handicap': handicap,
             'holes': holes
         }
         # Insert or update the score so data is persisted
@@ -270,6 +309,8 @@ def add_score(tour_id):
         return render_template('score_summary.html', stats=stats)
     if 'pars' not in tour:
         tour['pars'] = [4] * 18
+    if 'hcps' not in tour:
+        tour['hcps'] = list(range(1, 19))
     return render_template('add_score.html', tour=tour, score=existing_score)
 
 

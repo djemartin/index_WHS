@@ -27,12 +27,13 @@
         <label>Slope <input type="number" name="slope" step="1" value="{{ golf.slope if golf else '' }}" required></label><br>
         <!-- SSS may be decimal so allow fractional numbers -->
         <label>SSS <input type="number" name="sss" step="0.1" value="{{ golf.sss if golf else '' }}" required></label><br>
-        <h2>Par par trou</h2>
+        <h2>Par et HCP par trou</h2>
         <table>
             <thead>
                 <tr>
                     <th>Trou</th>
                     <th>Par</th>
+                    <th>HCP</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +41,7 @@
                 <tr>
                     <td>{{ i }}</td>
                     <td><input type="number" name="par_{{ i }}" step="1" value="{{ golf.pars[i-1] if golf and golf.pars else '' }}" required></td>
+                    <td><input type="number" name="hcp_{{ i }}" step="1" value="{{ golf.hcps[i-1] if golf and golf.hcps else i }}" required></td>
                 </tr>
                 {% endfor %}
             </tbody>
