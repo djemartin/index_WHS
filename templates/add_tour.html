@@ -35,7 +35,9 @@
         <label>Par du parcours <input type="number" name="par" step="1" value="{{ tour.par if tour else '' }}" required></label><br>
         <label>Slope <input type="number" name="slope" step="1" value="{{ tour.slope if tour else '' }}" required></label><br>
         <label>SSS <input type="number" name="sss" step="0.1" value="{{ tour.sss if tour else '' }}" required></label><br>
-        <label>PCC <input type="number" name="pcc" step="0.1" value="{{ tour.pcc if tour else 0 }}" required></label><br>
+        <label><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span>
+            <input type="number" name="pcc" step="1" min="-1" max="3" value="{{ tour.pcc if tour else 0 }}" required>
+        </label><br>
         <h2>Par et HCP par trou</h2>
         <table>
             <thead>

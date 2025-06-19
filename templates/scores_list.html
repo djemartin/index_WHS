@@ -31,6 +31,7 @@
             <tr>
                 <th>Nom</th>
                 <th>Jour</th>
+                <th><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span></th>
                 <th>Golf</th>
                 <th>Total Score</th>
                 <th>Total SBA</th>
@@ -42,6 +43,7 @@
             <tr>
                 <td>{{ c.tour.name }}</td>
                 <td>{{ c.tour.get('jour') }}</td>
+                <td>{{ c.tour.get('pcc', 0) }}</td>
                 <td>{{ c.golf.name if c.golf }}</td>
                 <td>{{ c.total_score }}</td>
                 <td>{{ c.total_sba }}</td>
@@ -50,7 +52,7 @@
                 </td>
             </tr>
         {% else %}
-            <tr><td colspan="6">Aucune carte enregistrée.</td></tr>
+            <tr><td colspan="7">Aucune carte enregistrée.</td></tr>
         {% endfor %}
         </tbody>
     </table>
