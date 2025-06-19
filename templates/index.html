@@ -26,6 +26,7 @@
                 <th>Golf</th>
                 <th>Total Score</th>
                 <th>Total SBA</th>
+                <th>Diff WHS</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -41,6 +42,7 @@
                 </td>
                 <td>{{ tour.total_score if tour.total_score is not none else '' }}</td>
                 <td>{{ tour.total_sba if tour.total_sba is not none else '' }}</td>
+                <td>{{ tour.diff_whs if tour.diff_whs is not none else '' }}</td>
                 <td>
                     <a href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Modifier</a>
                     <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" style="display:inline;">
@@ -50,7 +52,7 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="7">Aucun tour enregistré.</td></tr>
+            <tr><td colspan="8">Aucun tour enregistré.</td></tr>
             {% endfor %}
         </tbody>
     </table>

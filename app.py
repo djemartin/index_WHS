@@ -18,19 +18,30 @@ def index():
     all_scores = scores_table.all()
     scores = {s['tour_id']: s for s in all_scores}
 
-    # Determine the 8 best TOTAL SBA among the last 20 scorecards
+    # Determine the lowest Diff WHS among the last 20 scorecards
     recent_scores = sorted(all_scores, key=lambda x: x.doc_id, reverse=True)[:20]
-    totals = []
+    diffs = []
     for s in recent_scores:
         holes = s.get('holes', [])
         total_sba = sum(
             (h.get('adjusted') if h.get('adjusted') is not None else 0)
             for h in holes
         )
-        totals.append((total_sba, s.get('tour_id')))
-    top_ids = {
-        tour_id for _, tour_id in sorted(totals, key=lambda x: x[0])[:8]
-    }
+        tour = tours_table.get(doc_id=s.get('tour_id'))
+        if not tour:
+            continue
+        slope = tour.get('slope')
+        sss = tour.get('sss')
+        par = tour.get('par')
+        if slope and sss is not None and par is not None:
+            diff = ((total_sba - sss) / slope) * 113 + (sss - par)
+            diff = round(diff, 1)
+            diffs.append((diff, s.get('tour_id')))
+    min_diff = None
+    highlight_ids = set()
+    if diffs:
+        min_diff = min(d for d, _ in diffs)
+        highlight_ids = {tid for d, tid in diffs if d == min_diff}
     tours = []
     # Sort tours by doc_id descending so the most recent tour
     # appears first on the main page
@@ -45,11 +56,22 @@ def index():
                 (h.get('adjusted') if h.get('adjusted') is not None else 0)
                 for h in holes
             )
+            slope = t.get('slope')
+            sss = t.get('sss')
+            par = t.get('par')
+            if slope and sss is not None and par is not None:
+                diff_value = ((total_sba - sss) / slope) * 113 + (sss - par)
+                diff_whs = round(diff_value, 1)
+            else:
+                diff_whs = None
+        else:
+            diff_whs = None
         tour_data = dict(t)
         tour_data['doc_id'] = t.doc_id
         tour_data['total_score'] = total_score
         tour_data['total_sba'] = total_sba
-        tour_data['highlight'] = t.doc_id in top_ids
+        tour_data['diff_whs'] = diff_whs
+        tour_data['highlight'] = t.doc_id in highlight_ids
         tours.append(tour_data)
     return render_template('index.html', tours=tours, golfs=golfs)
 
