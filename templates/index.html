@@ -31,7 +31,7 @@
         </thead>
         <tbody>
             {% for tour in tours %}
-            <tr>
+            <tr{% if tour.highlight %} class="highlight"{% endif %}>
                 <td>{{ tour.name }}</td>
                 <td>{{ tour.get('jour') }}</td>
                 <td>{{ tour.get('date') }}</td>

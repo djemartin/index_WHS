@@ -3,3 +3,4 @@ header { background: #333; color: white; padding: 10px; }
 nav a { color: white; margin-right: 10px; text-decoration: none; }
 table { border-collapse: collapse; width: 100%; }
 td, th { border: 1px solid #ccc; padding: 5px; text-align: center; }
+.highlight { background-color: #ffff99; }
