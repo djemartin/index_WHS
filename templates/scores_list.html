@@ -16,6 +16,16 @@
 </header>
 <main>
     <h1>Cartes enregistrées</h1>
+    <form method="get" style="margin-bottom:10px;">
+        <label>Index actuel <input type="number" step="0.1" name="index" value="{{ current_index if current_index is not none else '' }}"></label>
+        <label>Trier par
+            <select name="sort">
+                <option value="date" {% if sort == 'date' %}selected{% endif %}>Date</option>
+                <option value="diff" {% if sort == 'diff' %}selected{% endif %}>Différentiel</option>
+            </select>
+        </label>
+        <button type="submit">Appliquer</button>
+    </form>
     <table>
         <thead>
             <tr>
@@ -24,6 +34,7 @@
                 <th>Golf</th>
                 <th>Total Score</th>
                 <th>Total SBA</th>
+                <th>Diff WHS</th>
             </tr>
         </thead>
         <tbody>
@@ -34,9 +45,12 @@
                 <td>{{ c.golf.name if c.golf }}</td>
                 <td>{{ c.total_score }}</td>
                 <td>{{ c.total_sba }}</td>
+                <td>
+                    {% if c.diff is not none %}{{ c.diff }}{{ c.emoji }}{% endif %}
+                </td>
             </tr>
         {% else %}
-            <tr><td colspan="5">Aucune carte enregistrée.</td></tr>
+            <tr><td colspan="6">Aucune carte enregistrée.</td></tr>
         {% endfor %}
         </tbody>
     </table>

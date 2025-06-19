@@ -37,9 +37,9 @@ def calculate_sba(pars, strokes, handicap, hcps):
     return total_sba, adjusted, given
 
 
-def diff_whs(sba_total, slope, sss, par):
-    """Calculate the WHS differential for a card."""
-    return ((sba_total - sss) / slope) * 113 + (sss - par)
+def diff_whs(sba_total, slope, sss, par, pcc=0):
+    """Calculate the WHS differential for a card including PCC."""
+    return ((sba_total - sss - pcc) / slope) * 113 + (sss - par)
 
 @app.route('/')
 def index():
@@ -64,8 +64,9 @@ def index():
         slope = tour.get('slope')
         sss = tour.get('sss')
         par = tour.get('par')
+        pcc = tour.get('pcc', 0)
         if slope and sss is not None and par is not None:
-            diff = diff_whs(total_sba_val, slope, sss, par)
+            diff = diff_whs(total_sba_val, slope, sss, par, pcc)
             diff = round(diff, 1)
             diffs.append((diff, s.get('tour_id')))
     min_diff = None
@@ -92,8 +93,9 @@ def index():
             slope = t.get('slope')
             sss = t.get('sss')
             par = t.get('par')
+            pcc = t.get('pcc', 0)
             if slope and sss is not None and par is not None:
-                diff_value = diff_whs(total_sba_val, slope, sss, par)
+                diff_value = diff_whs(total_sba_val, slope, sss, par, pcc)
                 diff_whs_val = round(diff_value, 1)
             else:
                 diff_whs_val = None
@@ -118,6 +120,7 @@ def start_score():
         name = request.form.get('name')
         jour = request.form.get('jour', type=int)
         date = request.form.get('date')
+        pcc = request.form.get('pcc', type=float)
         golf = golfs_table.get(doc_id=golf_id)
         if golf:
             pars = golf.get('pars', [4] * 18)
@@ -130,6 +133,7 @@ def start_score():
                 'par': golf.get('par'),
                 'slope': golf.get('slope'),
                 'sss': golf.get('sss'),
+                'pcc': pcc,
                 'pars': pars,
                 'hcps': hcps,
             }
@@ -193,6 +197,7 @@ def add_tour():
             'par': request.form.get('par', type=int),
             'slope': request.form.get('slope', type=int),
             'sss': request.form.get('sss', type=float),
+            'pcc': request.form.get('pcc', type=float),
             'pars': pars,
             'hcps': hcps,
         }
@@ -280,6 +285,15 @@ def add_score(tour_id):
             'gir': f"{gir_hits}/18"
         }
 
+        # Compute WHS differential for this card
+        slope = tour.get('slope')
+        sss = tour.get('sss')
+        par = tour.get('par')
+        pcc = tour.get('pcc', 0)
+        if slope and sss is not None and par is not None:
+            diff_value = diff_whs(sum(h['adjusted'] for h in holes), slope, sss, par, pcc)
+            stats['diff_whs'] = format(diff_value, '.1f')
+
         # Persist stats in dedicated table
         stats_data = {
             'score_id': score_id,
@@ -317,6 +331,9 @@ def add_score(tour_id):
 @app.route('/scores')
 def list_scores():
     """Display the list of recorded scorecards."""
+    current_index = request.args.get('index', type=float)
+    sort_key = request.args.get('sort', 'date')
+
     golfs = {g.doc_id: g for g in golfs_table.all()}
     tours = {t.doc_id: t for t in tours_table.all()}
     cards = []
@@ -330,13 +347,37 @@ def list_scores():
             (h.get('adjusted') if h.get('adjusted') is not None else 0)
             for h in holes
         )
+        pcc = tour.get('pcc', 0)
+        slope = tour.get('slope')
+        sss = tour.get('sss')
+        par = tour.get('par')
+        diff = None
+        emoji = ''
+        if slope and sss is not None and par is not None:
+            diff_value = diff_whs(total_sba, slope, sss, par, pcc)
+            diff = round(diff_value, 1)
+            if current_index is not None:
+                if diff < current_index:
+                    emoji = '🔻'
+                elif diff > current_index:
+                    emoji = '🔺'
+                else:
+                    emoji = '➡️'
         cards.append({
             'tour': tour,
             'golf': golfs.get(tour.get('golf_id')),
             'total_score': total_score,
-            'total_sba': total_sba,
+            'total_sba': round(float(total_sba), 1),
+            'diff': diff,
+            'emoji': emoji,
         })
-    return render_template('scores_list.html', cards=cards)
+
+    if sort_key == 'diff':
+        cards.sort(key=lambda x: (x['diff'] is None, x.get('diff')))
+    else:
+        cards.sort(key=lambda x: x['tour'].get('date', ''))
+
+    return render_template('scores_list.html', cards=cards, current_index=current_index, sort=sort_key)
 
 
 @app.route('/stats')
