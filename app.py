@@ -12,6 +12,11 @@ scores_table = db.table('scores')
 stats_table = db.table('stats')
 golfs_table = db.table('golfs')
 
+# Ensure existing tours have a PCC value for backward compatibility
+for t in tours_table.all():
+    if 'pcc' not in t:
+        tours_table.update({'pcc': 0}, doc_ids=[t.doc_id])
+
 
 def distribute_handicap(handicap, hcps):
     """Return a list with strokes received for each hole."""
@@ -120,7 +125,9 @@ def start_score():
         name = request.form.get('name')
         jour = request.form.get('jour', type=int)
         date = request.form.get('date')
-        pcc = request.form.get('pcc', type=float)
+        pcc = request.form.get('pcc', type=int)
+        if pcc is None:
+            pcc = 0
         golf = golfs_table.get(doc_id=golf_id)
         if golf:
             pars = golf.get('pars', [4] * 18)
@@ -189,6 +196,9 @@ def add_tour():
         form_id = request.form.get('id', type=int)
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         hcps = [request.form.get(f'hcp_{i}', type=int) for i in range(1, 19)]
+        pcc_val = request.form.get('pcc', type=int)
+        if pcc_val is None:
+            pcc_val = 0
         tour = {
             'name': request.form.get('name'),
             'jour': request.form.get('jour', type=int),
@@ -197,7 +207,7 @@ def add_tour():
             'par': request.form.get('par', type=int),
             'slope': request.form.get('slope', type=int),
             'sss': request.form.get('sss', type=float),
-            'pcc': request.form.get('pcc', type=float),
+            'pcc': pcc_val,
             'pars': pars,
             'hcps': hcps,
         }
