@@ -27,6 +27,8 @@ def index():
             (h.get('adjusted') if h.get('adjusted') is not None else 0)
             for h in holes
         )
+        total_sba_val = float(total_sba)
+        total_sba = round(total_sba_val, 1)
         tour = tours_table.get(doc_id=s.get('tour_id'))
         if not tour:
             continue
@@ -34,7 +36,7 @@ def index():
         sss = tour.get('sss')
         par = tour.get('par')
         if slope and sss is not None and par is not None:
-            diff = ((total_sba - sss) / slope) * 113 + (sss - par)
+            diff = ((total_sba_val - sss) / slope) * 113 + (sss - par)
             diff = round(diff, 1)
             diffs.append((diff, s.get('tour_id')))
     min_diff = None
@@ -56,20 +58,24 @@ def index():
                 (h.get('adjusted') if h.get('adjusted') is not None else 0)
                 for h in holes
             )
+            total_sba_val = float(total_sba)
+            total_sba = round(total_sba_val, 1)
             slope = t.get('slope')
             sss = t.get('sss')
             par = t.get('par')
             if slope and sss is not None and par is not None:
-                diff_value = ((total_sba - sss) / slope) * 113 + (sss - par)
+                diff_value = ((total_sba_val - sss) / slope) * 113 + (sss - par)
                 diff_whs = round(diff_value, 1)
             else:
                 diff_whs = None
+            formatted_sba = format(total_sba_val, '.1f')
         else:
             diff_whs = None
+            formatted_sba = None
         tour_data = dict(t)
         tour_data['doc_id'] = t.doc_id
         tour_data['total_score'] = total_score
-        tour_data['total_sba'] = total_sba
+        tour_data['total_sba'] = formatted_sba if formatted_sba is not None else None
         tour_data['diff_whs'] = diff_whs
         tour_data['highlight'] = t.doc_id in highlight_ids
         tours.append(tour_data)
