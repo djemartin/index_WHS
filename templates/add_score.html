@@ -18,6 +18,9 @@
     <h1>Saisir Score pour {{ tour.name }}</h1>
     <form method="post">
         <label>Handicap de jeu <input type="number" name="handicap" id="handicap" value="{{ score.handicap if score else '' }}" required></label><br>
+        <label><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span>
+            <input type="number" name="pcc" step="1" min="-1" max="3" value="{{ tour.get('pcc', 0) }}" required>
+        </label><br>
         {% if score %}
         <input type="hidden" name="id" value="{{ score.doc_id }}">
         {% endif %}

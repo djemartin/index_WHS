@@ -250,6 +250,13 @@ def add_score(tour_id):
     Score = Query()
     existing_score = scores_table.get(Score.tour_id == tour_id)
     if request.method == 'POST':
+        # Allow updating the PCC value when submitting the score form
+        pcc_val = request.form.get('pcc', type=int)
+        if pcc_val is None:
+            pcc_val = 0
+        tours_table.update({'pcc': pcc_val}, doc_ids=[tour_id])
+        tour['pcc'] = pcc_val
+
         handicap = request.form.get('handicap', type=int)
         hcps = tour.get('hcps', list(range(1, 19)))
         given_dist = distribute_handicap(handicap, hcps)
