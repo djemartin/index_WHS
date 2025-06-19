@@ -17,6 +17,7 @@
 <main>
     <h1>Saisir Score pour {{ tour.name }}</h1>
     <form method="post">
+        <label>Handicap de jeu <input type="number" name="handicap" id="handicap" value="{{ score.handicap if score else '' }}" required></label><br>
         {% if score %}
         <input type="hidden" name="id" value="{{ score.doc_id }}">
         {% endif %}
@@ -37,9 +38,15 @@
                     {% endfor %}
                 </tr>
                 <tr>
+                    <th>HCP</th>
+                    {% for i in range(1, 19) %}
+                    <td><input type="number" name="hcp_{{ i }}" id="hcp_{{ i }}" step="1" value="{{ tour.hcps[i-1] }}" readonly></td>
+                    {% endfor %}
+                </tr>
+                <tr>
                     <th>Coups reçus</th>
                     {% for i in range(1, 19) %}
-                    <td><input type="number" name="given_{{ i }}" id="given_{{ i }}" step="1" value="{{ score.holes[i-1].strokes_given if score else '' }}" required></td>
+                    <td><input type="number" name="given_{{ i }}" id="given_{{ i }}" step="1" value="{{ score.holes[i-1].strokes_given if score else '' }}" readonly></td>
                     {% endfor %}
                 </tr>
                 <tr>
@@ -103,11 +110,26 @@ function computeAdjusted(i){
     }
 }
 
+function computeGiven(){
+    var handicap = parseInt(document.getElementById('handicap').value) || 0;
+    var base = Math.floor(handicap / 18);
+    var extra = handicap % 18;
+    for(var i=1; i<=18; i++){
+        var hcp = parseInt(document.getElementById('hcp_' + i).value) || i;
+        var val = base + (hcp <= extra ? 1 : 0);
+        var field = document.getElementById('given_' + i);
+        if(field){
+            field.value = val;
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function(){
+    computeGiven();
     for(var i = 1; i <= 18; i++){
         updateFairway(i);
         computeAdjusted(i);
-        ['par_', 'given_', 'strokes_'].forEach(function(prefix){
+        ['par_', 'strokes_'].forEach(function(prefix){
             var el = document.getElementById(prefix + i);
             if(el){
                 el.addEventListener('input', function(){
@@ -115,6 +137,13 @@ document.addEventListener('DOMContentLoaded', function(){
                     computeAdjusted(i);
                 });
             }
+        });
+    }
+    var handicapField = document.getElementById('handicap');
+    if(handicapField){
+        handicapField.addEventListener('input', function(){
+            computeGiven();
+            for(var i=1; i<=18; i++){ computeAdjusted(i); }
         });
     }
 });
