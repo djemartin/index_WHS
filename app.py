@@ -15,7 +15,22 @@ golfs_table = db.table('golfs')
 @app.route('/')
 def index():
     golfs = {g.doc_id: g for g in golfs_table.all()}
-    scores = {s['tour_id']: s for s in scores_table.all()}
+    all_scores = scores_table.all()
+    scores = {s['tour_id']: s for s in all_scores}
+
+    # Determine the 8 best TOTAL SBA among the last 20 scorecards
+    recent_scores = sorted(all_scores, key=lambda x: x.doc_id, reverse=True)[:20]
+    totals = []
+    for s in recent_scores:
+        holes = s.get('holes', [])
+        total_sba = sum(
+            (h.get('adjusted') if h.get('adjusted') is not None else 0)
+            for h in holes
+        )
+        totals.append((total_sba, s.get('tour_id')))
+    top_ids = {
+        tour_id for _, tour_id in sorted(totals, key=lambda x: x[0])[:8]
+    }
     tours = []
     # Sort tours by doc_id descending so the most recent tour
     # appears first on the main page
@@ -34,6 +49,7 @@ def index():
         tour_data['doc_id'] = t.doc_id
         tour_data['total_score'] = total_score
         tour_data['total_sba'] = total_sba
+        tour_data['highlight'] = t.doc_id in top_ids
         tours.append(tour_data)
     return render_template('index.html', tours=tours, golfs=golfs)
 
