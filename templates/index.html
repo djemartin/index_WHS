@@ -21,7 +21,7 @@
     </thead>
     <tbody>
         {% for tour in tours %}
-        <tr{% if tour.highlight %} class="highlight"{% endif %}>
+        <tr>
             <td>{{ tour.name }}</td>
             <td>{{ tour.get('jour') }}</td>
             <td>{{ tour.get('date') }}</td>
@@ -32,7 +32,7 @@
             </td>
             <td>{{ tour.total_score if tour.total_score is not none else '' }}</td>
             <td>{{ tour.total_sba if tour.total_sba is not none else '' }}</td>
-            <td>{{ tour.diff_whs if tour.diff_whs is not none else '' }}</td>
+            <td{% if tour.highlight_diff %} class="best-diff"{% endif %}>{{ tour.diff_whs if tour.diff_whs is not none else '' }}</td>
             <td>
                 <a class="btn btn-sm btn-secondary" href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Modifier</a>
                 <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" class="d-inline">

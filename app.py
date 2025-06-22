@@ -83,11 +83,11 @@ def index():
             diff = diff_whs(total_sba_val, slope, sss, pcc)
             diffs.append((diff, s.get('tour_id')))
 
-    highlight_ids = set()
+    best_diff_ids = set()
     new_index = None
     if diffs:
         diffs.sort(key=lambda x: x[0])
-        highlight_ids = {tid for _, tid in diffs[:8]}
+        best_diff_ids = {tid for _, tid in diffs[:8]}
         if len(diffs) >= 8:
             best = [d[0] for d in diffs[:8]]
             new_index = round(sum(best) / 8, 1)
@@ -124,7 +124,7 @@ def index():
         tour_data['total_score'] = total_score
         tour_data['total_sba'] = formatted_sba if formatted_sba is not None else None
         tour_data['diff_whs'] = diff_whs_val
-        tour_data['highlight'] = t.doc_id in highlight_ids
+        tour_data['highlight_diff'] = t.doc_id in best_diff_ids
         tours.append(tour_data)
     return render_template('index.html', tours=tours, golfs=golfs, new_index=new_index)
 
