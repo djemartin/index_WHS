@@ -53,7 +53,7 @@ def diff_whs(sba_total, slope, sss, pcc=0):
 
     import math
 
-    diff = ((sba_total - sss) / slope) * 113 - pcc
+    diff = ((113 / slope) * (sba_total - sss) - pcc)
     # Round up to the next tenth (e.g. 19.21 -> 19.3)
     return math.ceil(diff * 10) / 10
 
