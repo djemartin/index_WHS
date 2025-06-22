@@ -1,63 +1,46 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>WHS Golf</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-<header>
-    <nav>
-        <a href="/add_tour">Ajouter un Tour</a>
-        <a href="/start_score">Nouvelle Carte</a>
-        <a href="/golf">Gérer les Golfs</a>
-        <a href="/scores">Cartes</a>
-        <a href="/stats">Statistiques</a>
-    </nav>
-</header>
-<main>
-    <h1>Liste des Tours</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Jour</th>
-                <th>Date</th>
-                <th><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span></th>
-                <th>Golf</th>
-                <th>Total Score</th>
-                <th>Total SBA</th>
-                <th>Diff WHS</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for tour in tours %}
-            <tr{% if tour.highlight %} class="highlight"{% endif %}>
-                <td>{{ tour.name }}</td>
-                <td>{{ tour.get('jour') }}</td>
-                <td>{{ tour.get('date') }}</td>
-                <td>{{ tour.get('pcc', 0) }}</td>
-                <td>
-                    {% set g = golfs.get(tour.golf_id) %}
-                    {{ g.name if g }}
-                </td>
-                <td>{{ tour.total_score if tour.total_score is not none else '' }}</td>
-                <td>{{ tour.total_sba if tour.total_sba is not none else '' }}</td>
-                <td>{{ tour.diff_whs if tour.diff_whs is not none else '' }}</td>
-                <td>
-                    <a href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Modifier</a>
-                    <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Supprimer ce tour ?');">Supprimer</button>
-                    </form>
-                    <a href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Saisir Score</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr><td colspan="9">Aucun tour enregistré.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</main>
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block title %}WHS Golf{% endblock %}
+{% block content %}
+<h1 class="mb-3">Liste des Tours</h1>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Jour</th>
+            <th>Date</th>
+            <th><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span></th>
+            <th>Golf</th>
+            <th>Total Score</th>
+            <th>Total SBA</th>
+            <th>Diff WHS</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tour in tours %}
+        <tr{% if tour.highlight %} class="highlight"{% endif %}>
+            <td>{{ tour.name }}</td>
+            <td>{{ tour.get('jour') }}</td>
+            <td>{{ tour.get('date') }}</td>
+            <td>{{ tour.get('pcc', 0) }}</td>
+            <td>
+                {% set g = golfs.get(tour.golf_id) %}
+                {{ g.name if g }}
+            </td>
+            <td>{{ tour.total_score if tour.total_score is not none else '' }}</td>
+            <td>{{ tour.total_sba if tour.total_sba is not none else '' }}</td>
+            <td>{{ tour.diff_whs if tour.diff_whs is not none else '' }}</td>
+            <td>
+                <a class="btn btn-sm btn-secondary" href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Modifier</a>
+                <form action="{{ url_for('delete_tour', tour_id=tour.doc_id) }}" method="post" class="d-inline">
+                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Supprimer ce tour ?');">Supprimer</button>
+                </form>
+                <a class="btn btn-sm btn-primary" href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Saisir Score</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9">Aucun tour enregistré.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

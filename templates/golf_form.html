@@ -1,89 +1,97 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Gestion Golf</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-<header>
-    <nav>
-        <a href="/">Accueil</a>
-        <a href="/add_tour">Ajouter un Tour</a>
-        <a href="/scores">Cartes</a>
-        <a href="/stats">Statistiques</a>
-    </nav>
-</header>
-<main>
-    <h1>{% if golf %}Modifier le Golf{% else %}Ajouter un Golf{% endif %}</h1>
-    <form method="post">
-        {% if golf %}
-        <input type="hidden" name="id" value="{{ golf.doc_id }}">
-        {% endif %}
-        <label>Nom du Golf <input type="text" name="name" value="{{ golf.name if golf else '' }}" required></label><br>
-        <label>Nom du Parcours <input type="text" name="course" value="{{ golf.course if golf else '' }}" required></label><br>
-        <label>Par du parcours <input type="number" name="par" step="1" value="{{ golf.par if golf else '' }}" required></label><br>
-        <label>Boules de départ <input type="text" name="tees" value="{{ golf.tees if golf else '' }}" required></label><br>
-        <label>Slope <input type="number" name="slope" step="1" value="{{ golf.slope if golf else '' }}" required></label><br>
-        <!-- SSS may be decimal so allow fractional numbers -->
-        <label>SSS <input type="number" name="sss" step="0.1" value="{{ golf.sss if golf else '' }}" required></label><br>
-        <h2>Par et HCP par trou</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Trou</th>
-                    <th>Par</th>
-                    <th>HCP</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(1, 19) %}
-                <tr>
-                    <td>{{ i }}</td>
-                    <td><input type="number" name="par_{{ i }}" step="1" value="{{ golf.pars[i-1] if golf and golf.pars else '' }}" required></td>
-                    <td><input type="number" name="hcp_{{ i }}" step="1" value="{{ golf.hcps[i-1] if golf and golf.hcps else i }}" required></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit">Enregistrer</button>
-        {% if golf %}
-        <a href="{{ url_for('manage_golf') }}">Annuler</a>
-        {% endif %}
-    </form>
-
-    <h2>Golfs enregistrés</h2>
-    <table>
+{% extends 'layout.html' %}
+{% if golf %}{% set page_title = 'Modifier le Golf' %}{% else %}{% set page_title = 'Ajouter un Golf' %}{% endif %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+<h1 class="mb-3">{{ page_title }}</h1>
+<form method="post">
+    {% if golf %}
+    <input type="hidden" name="id" value="{{ golf.doc_id }}">
+    {% endif %}
+    <div class="mb-3">
+        <label class="form-label">Nom du Golf
+            <input type="text" name="name" value="{{ golf.name if golf else '' }}" class="form-control" required>
+        </label>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Nom du Parcours
+            <input type="text" name="course" value="{{ golf.course if golf else '' }}" class="form-control" required>
+        </label>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Par du parcours
+            <input type="number" name="par" step="1" value="{{ golf.par if golf else '' }}" class="form-control" required>
+        </label>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Boules de départ
+            <input type="text" name="tees" value="{{ golf.tees if golf else '' }}" class="form-control" required>
+        </label>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Slope
+            <input type="number" name="slope" step="1" value="{{ golf.slope if golf else '' }}" class="form-control" required>
+        </label>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">SSS
+            <input type="number" name="sss" step="0.1" value="{{ golf.sss if golf else '' }}" class="form-control" required>
+        </label>
+    </div>
+    <h2>Par et HCP par trou</h2>
+    <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Nom</th>
-                <th>Parcours</th>
+                <th>Trou</th>
                 <th>Par</th>
-                <th>Slope</th>
-                <th>SSS</th>
-                <th>Actions</th>
+                <th>HCP</th>
             </tr>
         </thead>
         <tbody>
-            {% for g in golfs %}
+            {% for i in range(1, 19) %}
             <tr>
-                <td>{{ g.name }}</td>
-                <td>{{ g.course }}</td>
-                <td>{{ g.par }}</td>
-                <td>{{ g.slope }}</td>
-                <td>{{ g.sss }}</td>
-                <td>
-                    <a href="{{ url_for('manage_golf', id=g.doc_id) }}">Modifier</a>
-                    <form action="{{ url_for('delete_golf', golf_id=g.doc_id) }}" method="post" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Supprimer ce golf ?');">Supprimer</button>
-                    </form>
-                </td>
+                <td>{{ i }}</td>
+                <td><input type="number" name="par_{{ i }}" step="1" value="{{ golf.pars[i-1] if golf and golf.pars else '' }}" class="form-control" required></td>
+                <td><input type="number" name="hcp_{{ i }}" step="1" value="{{ golf.hcps[i-1] if golf and golf.hcps else i }}" class="form-control" required></td>
             </tr>
-            {% else %}
-            <tr><td colspan="6">Aucun golf enregistré.</td></tr>
             {% endfor %}
         </tbody>
     </table>
-</main>
-</body>
-</html>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    {% if golf %}
+    <a href="{{ url_for('manage_golf') }}" class="btn btn-secondary ms-2">Annuler</a>
+    {% endif %}
+</form>
+
+<h2 class="mt-4">Golfs enregistrés</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Parcours</th>
+            <th>Par</th>
+            <th>Slope</th>
+            <th>SSS</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for g in golfs %}
+        <tr>
+            <td>{{ g.name }}</td>
+            <td>{{ g.course }}</td>
+            <td>{{ g.par }}</td>
+            <td>{{ g.slope }}</td>
+            <td>{{ g.sss }}</td>
+            <td>
+                <a class="btn btn-sm btn-secondary" href="{{ url_for('manage_golf', id=g.doc_id) }}">Modifier</a>
+                <form action="{{ url_for('delete_golf', golf_id=g.doc_id) }}" method="post" class="d-inline">
+                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Supprimer ce golf ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">Aucun golf enregistré.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

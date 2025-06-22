@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Statistiques</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-<header>
-    <nav>
-        <a href="/">Accueil</a>
-        <a href="/golf">Gérer les Golfs</a>
-        <a href="/scores">Cartes</a>
-        <a href="/stats">Statistiques</a>
-    </nav>
-</header>
-<main>
-    <h1>Statistiques du tour</h1>
-    <p>Fairways touchés : {{ stats.fairway }}</p>
-    <p>Nombre total de putts : {{ stats.putts_total }} (moyenne {{ stats.putts_avg }}, moy. cartes {{ stats.putts_avg_cards }})</p>
-    <p>Greens en régulation : {{ stats.gir }}</p>
-    {% if stats.diff_whs %}<p>Différentiel WHS : {{ stats.diff_whs }}</p>{% endif %}
-    <a href="/">Retour à l'accueil</a>
-</main>
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block title %}Statistiques{% endblock %}
+{% block content %}
+<h1 class="mb-3">Statistiques du tour</h1>
+<p>Fairways touchés : {{ stats.fairway }}</p>
+<p>Nombre total de putts : {{ stats.putts_total }} (moyenne {{ stats.putts_avg }}, moy. cartes {{ stats.putts_avg_cards }})</p>
+<p>Greens en régulation : {{ stats.gir }}</p>
+{% if stats.diff_whs %}<p>Différentiel WHS : {{ stats.diff_whs }}</p>{% endif %}
+<a href="/" class="btn btn-secondary mt-3">Retour à l'accueil</a>
+{% endblock %}

@@ -1,61 +1,51 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Cartes enregistrées</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-<header>
-    <nav>
-        <a href="/">Accueil</a>
-        <a href="/golf">Gérer les Golfs</a>
-        <a href="/scores">Cartes</a>
-        <a href="/stats">Statistiques</a>
-    </nav>
-</header>
-<main>
-    <h1>Cartes enregistrées</h1>
-    <form method="get" style="margin-bottom:10px;">
-        <label>Index actuel <input type="number" step="0.1" name="index" value="{{ current_index if current_index is not none else '' }}"></label>
-        <label>Trier par
-            <select name="sort">
+{% extends 'layout.html' %}
+{% block title %}Cartes enregistrées{% endblock %}
+{% block content %}
+<h1 class="mb-3">Cartes enregistrées</h1>
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <label class="form-label">Index actuel
+            <input type="number" step="0.1" name="index" value="{{ current_index if current_index is not none else '' }}" class="form-control">
+        </label>
+    </div>
+    <div class="col-auto">
+        <label class="form-label">Trier par
+            <select name="sort" class="form-select">
                 <option value="date" {% if sort == 'date' %}selected{% endif %}>Date</option>
                 <option value="diff" {% if sort == 'diff' %}selected{% endif %}>Différentiel</option>
             </select>
         </label>
-        <button type="submit">Appliquer</button>
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Jour</th>
-                <th><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span></th>
-                <th>Golf</th>
-                <th>Total Score</th>
-                <th>Total SBA</th>
-                <th>Diff WHS</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for c in cards %}
-            <tr>
-                <td>{{ c.tour.name }}</td>
-                <td>{{ c.tour.get('jour') }}</td>
-                <td>{{ c.tour.get('pcc', 0) }}</td>
-                <td>{{ c.golf.name if c.golf }}</td>
-                <td>{{ c.total_score }}</td>
-                <td>{{ c.total_sba }}</td>
-                <td>
-                    {% if c.diff is not none %}{{ c.diff }}{{ c.emoji }}{% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr><td colspan="7">Aucune carte enregistrée.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</main>
-</body>
-</html>
+    </div>
+    <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-primary">Appliquer</button>
+    </div>
+</form>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Jour</th>
+            <th><span title="Ajustement des conditions de jeu automatique calculé par la FFGolf, valeur entre -1 et +3.">PCC</span></th>
+            <th>Golf</th>
+            <th>Total Score</th>
+            <th>Total SBA</th>
+            <th>Diff WHS</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c in cards %}
+        <tr>
+            <td>{{ c.tour.name }}</td>
+            <td>{{ c.tour.get('jour') }}</td>
+            <td>{{ c.tour.get('pcc', 0) }}</td>
+            <td>{{ c.golf.name if c.golf }}</td>
+            <td>{{ c.total_score }}</td>
+            <td>{{ c.total_sba }}</td>
+            <td>{% if c.diff is not none %}{{ c.diff }}{{ c.emoji }}{% endif %}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="7">Aucune carte enregistrée.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
