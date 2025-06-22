@@ -124,6 +124,7 @@ def index():
         tour_data['total_sba'] = formatted_sba if formatted_sba is not None else None
         tour_data['diff_whs'] = diff_whs_val
         tour_data['highlight_diff'] = t.doc_id in best_diff_ids
+        tour_data['has_score'] = score_entry is not None
         tours.append(tour_data)
     return render_template('index.html', tours=tours, golfs=golfs, new_index=new_index)
 
