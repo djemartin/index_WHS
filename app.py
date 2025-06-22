@@ -106,7 +106,6 @@ def index():
                 for h in holes
             )
             total_sba_val = float(total_sba)
-            total_sba = round(total_sba_val, 1)
             slope = t.get('slope')
             sss = t.get('sss')
             pcc = t.get('pcc', 0)
@@ -115,7 +114,7 @@ def index():
                 diff_whs_val = diff_value
             else:
                 diff_whs_val = None
-            formatted_sba = format(total_sba_val, '.1f')
+            formatted_sba = int(total_sba)
         else:
             diff_whs_val = None
             formatted_sba = None
@@ -393,7 +392,7 @@ def list_scores():
             'tour': tour,
             'golf': golfs.get(tour.get('golf_id')),
             'total_score': total_score,
-            'total_sba': round(float(total_sba), 1),
+            'total_sba': int(total_sba),
             'diff': diff,
             'emoji': emoji,
         })
