@@ -47,15 +47,15 @@ def diff_whs(sba_total, slope, sss, pcc=0):
 
     The PCC value is always subtracted from the differential, so a PCC of
     ``+1`` will decrease the differential by 1 and a PCC of ``-1`` will
-    increase it by 1. The result is rounded **up** to the next tenth as
-    required by the WHS specification.
+    increase it by 1. The result is rounded **down** to the nearest tenth as
+    requested.
     """
 
     import math
 
     diff = ((113 / slope) * (sba_total - sss) - pcc)
-    # Round up to the next tenth (e.g. 19.21 -> 19.3)
-    return math.ceil(diff * 10) / 10
+    # Round down to the nearest tenth (e.g. 19.29 -> 19.2)
+    return math.floor(diff * 10) / 10
 
 @app.route('/')
 def index():
