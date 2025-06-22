@@ -1,26 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Statistiques Globales</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-<header>
-    <nav>
-        <a href="/">Accueil</a>
-        <a href="/golf">Gérer les Golfs</a>
-        <a href="/scores">Cartes</a>
-    </nav>
-</header>
-<main>
-    <h1>Statistiques Globales</h1>
-    <p>Moyenne des putts : {{ stats.avg_putts }} (moy. cartes {{ stats.avg_putts_cards }})</p>
-    <p>Moyenne des scores : {{ stats.avg_score }}</p>
-    <p>Nb coups moyen : {{ stats.avg_nb_coups }}</p>
-    <p>Fairways touchés : {{ stats.fairway_pct }}&#160;%</p>
-    <p>Greens en régulation : {{ stats.gir_pct }}&#160;%</p>
-    <p>Moyenne du SBA : {{ stats.avg_sba }}</p>
-</main>
-</body>
-</html>
+{% extends 'layout.html' %}
+{% block title %}Statistiques Globales{% endblock %}
+{% block content %}
+<h1 class="mb-3">Statistiques Globales</h1>
+<p>Moyenne des putts : {{ stats.avg_putts }} (moy. cartes {{ stats.avg_putts_cards }})</p>
+<p>Moyenne des scores : {{ stats.avg_score }}</p>
+<p>Nb coups moyen : {{ stats.avg_nb_coups }}</p>
+<p>Fairways touchés : {{ stats.fairway_pct }}&#160;%</p>
+<p>Greens en régulation : {{ stats.gir_pct }}&#160;%</p>
+<p>Moyenne du SBA : {{ stats.avg_sba }}</p>
+{% endblock %}
