@@ -84,9 +84,13 @@ def index():
             diffs.append((diff, s.get('tour_id')))
 
     highlight_ids = set()
+    new_index = None
     if diffs:
         diffs.sort(key=lambda x: x[0])
         highlight_ids = {tid for _, tid in diffs[:8]}
+        if len(diffs) >= 8:
+            best = [d[0] for d in diffs[:8]]
+            new_index = round(sum(best) / 8, 1)
     tours = []
     # Sort tours by doc_id descending so the most recent tour
     # appears first on the main page
@@ -122,7 +126,7 @@ def index():
         tour_data['diff_whs'] = diff_whs_val
         tour_data['highlight'] = t.doc_id in highlight_ids
         tours.append(tour_data)
-    return render_template('index.html', tours=tours, golfs=golfs)
+    return render_template('index.html', tours=tours, golfs=golfs, new_index=new_index)
 
 @app.route('/start_score', methods=['GET', 'POST'])
 def start_score():

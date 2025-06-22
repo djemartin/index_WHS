@@ -2,6 +2,9 @@
 {% block title %}WHS Golf{% endblock %}
 {% block content %}
 <h1 class="mb-3">Liste des Tours</h1>
+{% if new_index is not none %}
+<p class="text-center fw-bold">Nouvel Index: {{ new_index }}</p>
+{% endif %}
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
