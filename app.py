@@ -92,9 +92,9 @@ def index():
             best = [d[0] for d in diffs[:8]]
             new_index = round(sum(best) / 8, 1)
     tours = []
-    # Sort tours by doc_id descending so the most recent tour
+    # Sort tours by date descending so the most recent competition
     # appears first on the main page
-    for t in sorted(tours_table.all(), key=lambda x: x.doc_id, reverse=True):
+    for t in sorted(tours_table.all(), key=lambda x: x.get('date', ''), reverse=True):
         score_entry = scores.get(t.doc_id)
         total_score = None
         total_sba = None
