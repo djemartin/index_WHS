@@ -47,15 +47,21 @@ def diff_whs(sba_total, slope, sss, pcc=0):
 
     The PCC value is always subtracted from the differential, so a PCC of
     ``+1`` will decrease the differential by 1 and a PCC of ``-1`` will
-    increase it by 1. The result is rounded **down** to the nearest tenth as
-    requested.
+    increase it by 1. The result is rounded down to the nearest tenth, unless
+    the hundredth digit is strictly greater than ``5`` in which case it is
+    rounded up.
     """
 
     import math
 
-    diff = ((113 / slope) * (sba_total - sss) - pcc)
-    # Round down to the nearest tenth (e.g. 19.29 -> 19.2)
-    return math.floor(diff * 10) / 10
+    diff = (113 / slope) * (sba_total - sss) - pcc
+    base = math.floor(diff * 10)
+    rounded = base / 10
+    # Determine the hundredth place to choose rounding direction
+    centieme = int(abs(diff) * 100) % 10
+    if centieme > 5:
+        rounded += 0.1
+    return round(rounded, 1)
 
 @app.route('/')
 def index():
