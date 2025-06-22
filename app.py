@@ -63,7 +63,7 @@ def index():
     all_scores = scores_table.all()
     scores = {s['tour_id']: s for s in all_scores}
 
-    # Determine the lowest Diff WHS among the last 20 scorecards
+    # Determine the 8 lowest Diff WHS among the last 20 scorecards
     recent_scores = sorted(all_scores, key=lambda x: x.doc_id, reverse=True)[:20]
     diffs = []
     for s in recent_scores:
@@ -73,7 +73,6 @@ def index():
             for h in holes
         )
         total_sba_val = float(total_sba)
-        total_sba = round(total_sba_val, 1)
         tour = tours_table.get(doc_id=s.get('tour_id'))
         if not tour:
             continue
@@ -83,11 +82,11 @@ def index():
         if slope and sss is not None:
             diff = diff_whs(total_sba_val, slope, sss, pcc)
             diffs.append((diff, s.get('tour_id')))
-    min_diff = None
+
     highlight_ids = set()
     if diffs:
-        min_diff = min(d for d, _ in diffs)
-        highlight_ids = {tid for d, tid in diffs if d == min_diff}
+        diffs.sort(key=lambda x: x[0])
+        highlight_ids = {tid for _, tid in diffs[:8]}
     tours = []
     # Sort tours by doc_id descending so the most recent tour
     # appears first on the main page
