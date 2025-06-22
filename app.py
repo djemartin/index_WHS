@@ -286,7 +286,11 @@ def add_score(tour_id):
             strokes = request.form.get(f'strokes_{i}', type=int)
             given = given_dist[i-1]
             limit = par + 2 + given
-            adjusted = min(strokes, limit) if strokes is not None else None
+            adjusted_from_form = request.form.get(f'adjusted_{i}', type=int)
+            if adjusted_from_form is not None and existing_score:
+                adjusted = adjusted_from_form
+            else:
+                adjusted = min(strokes, limit) if strokes is not None else None
             hole = {
                 'par': par,
                 'strokes_given': given,

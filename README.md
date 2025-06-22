@@ -7,6 +7,7 @@ Key features:
 - Full CRUD management for tours with per-hole par values, a day number and a date.
 - Manage golf courses (name, course, par, slope, SSS and per-hole pars).
 - Input scores for each hole of a tour.
+- After saving a scorecard, the automatically computed SBA values can be edited.
 - PCC can be stored for each round to adjust the WHS differential.
 - Quick creation of a tour using "Nouvelle Carte" to jump directly to score entry.
 - View, edit and delete existing tours from the home page.
