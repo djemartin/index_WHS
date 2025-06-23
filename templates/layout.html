@@ -71,25 +71,28 @@
   function setTheme(theme){
     const link = document.getElementById('theme-link');
     const icon = document.querySelector('.theme-toggle i');
+    document.body.classList.remove('dark-theme', 'light-theme', 'golf-theme', 'dark');
+
     if(theme === 'light'){
       link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css';
-      document.body.classList.remove('dark-theme', 'dark');
       document.body.classList.add('light-theme');
-      icon.classList.remove('bi-moon-fill');
-      icon.classList.add('bi-moon');
-    }else{
+      icon.className = 'bi bi-moon';
+    } else if(theme === 'golf') {
+      link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css';
+      document.body.classList.add('golf-theme');
+      icon.className = 'bi bi-flag-fill';
+    } else {
       link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/darkly/bootstrap.min.css';
-      document.body.classList.remove('light-theme');
       document.body.classList.add('dark-theme', 'dark');
-      icon.classList.remove('bi-moon');
-      icon.classList.add('bi-moon-fill');
+      icon.className = 'bi bi-moon-fill';
     }
+
     localStorage.setItem('theme', theme);
   }
 
   function toggleTheme(){
     const current = localStorage.getItem('theme') || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
+    const next = current === 'dark' ? 'light' : (current === 'light' ? 'golf' : 'dark');
     setTheme(next);
   }
 
