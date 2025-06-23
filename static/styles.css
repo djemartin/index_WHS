@@ -30,3 +30,27 @@ body.dark-theme {
 td input[type="number"].form-control {
   min-width: 3.5ch;
 }
+/* Golf theme colors */
+body.golf-theme {
+  background: #F5F5F5;
+  color: #333333;
+}
+
+.golf-theme .navbar {
+  background-color: #2E7D32;
+}
+
+.golf-theme .navbar-brand,
+.golf-theme .navbar-nav .nav-link {
+  color: #F5F5F5 !important;
+}
+
+.golf-theme .btn-primary {
+  background-color: #1B5E20;
+  border-color: #1B5E20;
+}
+
+.golf-theme .btn-primary:hover {
+  background-color: #2E7D32;
+  border-color: #2E7D32;
+}
