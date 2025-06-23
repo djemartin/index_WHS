@@ -8,4 +8,16 @@
 <p>Fairways touchés : {{ stats.fairway_pct }}&#160;%</p>
 <p>Greens en régulation : {{ stats.gir_pct }}&#160;%</p>
 <p>Moyenne du SBA : {{ stats.avg_sba }}</p>
+<canvas id="diffChart" class="my-4"></canvas>
+<script>
+const diffLabels = {{ stats.diff_labels|tojson }};
+const diffData = {{ stats.diff_values|tojson }};
+new Chart(document.getElementById('diffChart'), {
+  type: 'line',
+  data: {
+    labels: diffLabels,
+    datasets: [{label: 'Diff WHS', data: diffData, borderColor: 'orange'}]
+  }
+});
+</script>
 {% endblock %}

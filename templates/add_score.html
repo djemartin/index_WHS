@@ -3,6 +3,7 @@
 {% block content %}
 <h1 class="mb-3">Saisir Score pour {{ tour.name }}</h1>
 <form method="post">
+    {{ csrf_token() }}
     <div class="mb-3">
         <label class="form-label">Handicap de jeu
             <input type="number" name="handicap" id="handicap" value="{{ score.handicap if score else '' }}" class="form-control" required>

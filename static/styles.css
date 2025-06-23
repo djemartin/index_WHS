@@ -1,2 +1,4 @@
 body { margin: 0; padding: 0; }
-.best-diff { color: red; font-weight: bold; }
+.best-diff { color: #f08080; font-weight: bold; }
+/* Simple dark-mode toggle */
+.theme-toggle { position: fixed; bottom: 1rem; right: 1rem; }

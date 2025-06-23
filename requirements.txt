@@ -1,2 +1,5 @@
 Flask
+Flask-WTF
+Flask-SQLAlchemy
+Flask-Login
 TinyDB
