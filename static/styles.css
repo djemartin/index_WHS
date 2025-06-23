@@ -97,22 +97,28 @@ a:hover {
 .badge-gold  { background-color: var(--golf-gold);  color: white; padding: 0.25em 0.6em; border-radius: 6px; }
 
 /* Tableau */
-table {
+table,
+.table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   margin-top: 1rem;
 }
-th, td {
-  padding: 0.75rem 1rem;
+th, td,
+.table th,
+.table td {
+  padding: 0.75rem 1rem !important;
   border-bottom: 1px solid #ccc;
 }
-th {
+th,
+.table th {
   background-color: var(--golf-beige);
   color: var(--golf-text);
 }
 
 /* Dark mode override */
-.dark table th {
+.dark table th,
+.dark .table th {
   background-color: #2c2c2c;
   color: var(--golf-text);
 }
