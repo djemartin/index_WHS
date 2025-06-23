@@ -1,20 +1,18 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
 }
 
-body.dark-theme {
-  background: #212529;
-  color: #fff;
-  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+body.light-theme {
+  background: #F5F5F5;
+  color: #333333;
 }
 
-body.light-theme {
-  background: #f8f9fa;
-  color: #212529;
-  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+body.dark-theme {
+  background: #121212;
+  color: #E0E0E0;
 }
 .best-diff {
   color: #ffae42;
