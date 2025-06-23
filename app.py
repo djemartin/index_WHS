@@ -378,6 +378,25 @@ def list_scores():
     return render_template('scores_list.html', cards=cards, current_index=current_index, sort=sort_key)
 
 
+@app.route('/view_score/<int:tour_id>')
+@login_required
+def view_score(tour_id):
+    tour = db.session.get(Tour, tour_id)
+    score = Score.query.filter_by(tour_id=tour_id).first()
+    stats = Stats.query.filter_by(tour_id=tour_id).first()
+    if not tour or not score:
+        return redirect(url_for('index'))
+    diff_val = None
+    if tour.slope and tour.sss is not None:
+        diff_val = diff_whs(
+            sum(h.get('adjusted') or 0 for h in score.holes or []),
+            tour.slope,
+            tour.sss,
+            tour.pcc,
+        )
+    return render_template('view_score.html', tour=tour, score=score, stats=stats, diff=diff_val)
+
+
 @app.route('/export/csv')
 @login_required
 def export_csv():
