@@ -35,7 +35,7 @@
     <tbody>
     {% for c in cards %}
         <tr>
-            <td>{{ c.tour.name }}</td>
+            <td><a href="{{ url_for('view_score', tour_id=c.tour.id) }}">{{ c.tour.name }}</a></td>
             <td>{{ c.tour.jour }}</td>
             <td>{{ c.tour.pcc if c.tour.pcc is not none else 0 }}</td>
             <td>{{ c.golf.name if c.golf }}</td>

@@ -42,7 +42,12 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Supprimer ce tour ?');">Supprimer</button>
                 </form>
-                <a class="btn btn-sm btn-primary" href="{{ url_for('add_score', tour_id=tour.doc_id) }}">{% if tour.has_score %}Voir Carte{% else %}Ajouter Carte{% endif %}</a>
+                {% if tour.has_score %}
+                <a class="btn btn-sm btn-primary" href="{{ url_for('view_score', tour_id=tour.doc_id) }}">Voir Carte</a>
+                <a class="btn btn-sm btn-secondary" href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Éditer Carte</a>
+                {% else %}
+                <a class="btn btn-sm btn-primary" href="{{ url_for('add_score', tour_id=tour.doc_id) }}">Ajouter Carte</a>
+                {% endif %}
             </td>
         </tr>
         {% else %}

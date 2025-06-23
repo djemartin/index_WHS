@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+{% block title %}Carte de Score{% endblock %}
+{% block content %}
+<h1 class="mb-3">Carte de Score - {{ tour.name }}</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th></th>
+            {% for i in range(1, 19) %}
+            <th>{{ i }}</th>
+            {% endfor %}
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Par</th>
+            {% set total_par = 0 %}
+            {% for h in score.holes %}
+            {% set total_par = total_par + (h.par or 0) %}
+            <td>{{ h.par }}</td>
+            {% endfor %}
+            <td>{{ total_par }}</td>
+        </tr>
+        <tr>
+            <th>HCP</th>
+            {% for h in tour.hcps %}
+            <td>{{ h }}</td>
+            {% endfor %}
+            <td></td>
+        </tr>
+        <tr>
+            <th>Coups reçus</th>
+            {% for h in score.holes %}
+            <td>{{ h.strokes_given }}</td>
+            {% endfor %}
+            <td>{{ score.handicap }}</td>
+        </tr>
+        <tr>
+            <th>Score</th>
+            {% set total_score = 0 %}
+            {% for h in score.holes %}
+            {% set total_score = total_score + (h.strokes or 0) %}
+            <td>{{ h.strokes }}</td>
+            {% endfor %}
+            <td>{{ total_score }}</td>
+        </tr>
+        <tr>
+            <th>Score brut ajusté</th>
+            {% set total_sba = 0 %}
+            {% for h in score.holes %}
+            {% set total_sba = total_sba + (h.adjusted or 0) %}
+            <td>{{ h.adjusted }}</td>
+            {% endfor %}
+            <td>{{ total_sba }}</td>
+        </tr>
+        <tr>
+            <th>Fairway touché</th>
+            {% for h in score.holes %}
+            <td class="text-center">{% if h.fairway %}✓{% endif %}</td>
+            {% endfor %}
+            <td>{% if stats %}{{ stats.fairway_hits }}/{{ stats.fairway_possible }}{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Green en régulation</th>
+            {% for h in score.holes %}
+            <td class="text-center">{% if h.gir %}✓{% endif %}</td>
+            {% endfor %}
+            <td>{% if stats %}{{ stats.gir_hits }}/18{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Nb de Putts</th>
+            {% set total_putts = 0 %}
+            {% for h in score.holes %}
+            {% set total_putts = total_putts + (h.putts or 0) %}
+            <td>{{ h.putts }}</td>
+            {% endfor %}
+            <td>{{ total_putts }}</td>
+        </tr>
+    </tbody>
+</table>
+{% if diff is not none %}
+<p>Différentiel WHS : {{ diff }}</p>
+{% endif %}
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Retour</a>
+{% endblock %}
