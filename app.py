@@ -20,7 +20,7 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 
 def migrate_from_tinydb():
@@ -110,7 +110,7 @@ def index():
     for s in recent:
         holes = s.holes or []
         total_sba = sum(h.get('adjusted') or 0 for h in holes)
-        tour = Tour.query.get(s.tour_id)
+        tour = db.session.get(Tour, s.tour_id)
         if not tour:
             continue
         if tour.slope and tour.sss is not None:
@@ -161,7 +161,7 @@ def manage_golf():
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         hcps = [request.form.get(f'hcp_{i}', type=int) for i in range(1, 19)]
         if golf_id:
-            golf = Golf.query.get(golf_id)
+            golf = db.session.get(Golf, golf_id)
         else:
             golf = Golf()
         golf.name = form.name.data
@@ -176,7 +176,7 @@ def manage_golf():
         db.session.commit()
         return redirect(url_for('manage_golf'))
 
-    golf = Golf.query.get(golf_id) if golf_id else None
+    golf = db.session.get(Golf, golf_id) if golf_id else None
     if golf and not golf.pars:
         golf.pars = [4] * 18
     if golf and not golf.hcps:
@@ -188,7 +188,7 @@ def manage_golf():
 @app.route('/golf/delete/<int:golf_id>', methods=['POST'])
 @login_required
 def delete_golf(golf_id):
-    golf = Golf.query.get(golf_id)
+    golf = db.session.get(Golf, golf_id)
     if golf:
         db.session.delete(golf)
         db.session.commit()
@@ -205,7 +205,7 @@ def add_tour():
         pars = [request.form.get(f'par_{i}', type=int) for i in range(1, 19)]
         hcps = [request.form.get(f'hcp_{i}', type=int) for i in range(1, 19)]
         if tour_id:
-            tour = Tour.query.get(tour_id)
+            tour = db.session.get(Tour, tour_id)
         else:
             tour = Tour(user_id=current_user.id)
         tour.name = form.name.data
@@ -222,7 +222,7 @@ def add_tour():
         db.session.commit()
         return redirect(url_for('index'))
 
-    tour = Tour.query.get(tour_id) if tour_id else None
+    tour = db.session.get(Tour, tour_id) if tour_id else None
     if tour and not tour.hcps:
         tour.hcps = list(range(1, 19))
     golfs = Golf.query.all()
@@ -232,7 +232,7 @@ def add_tour():
 @app.route('/tour/delete/<int:tour_id>', methods=['POST'])
 @login_required
 def delete_tour(tour_id):
-    tour = Tour.query.get(tour_id)
+    tour = db.session.get(Tour, tour_id)
     if tour:
         db.session.delete(tour)
         db.session.commit()
@@ -248,7 +248,7 @@ def start_score():
         jour = request.form.get('jour', type=int)
         date = request.form.get('date')
         pcc = request.form.get('pcc', type=int) or 0
-        golf = Golf.query.get(golf_id)
+        golf = db.session.get(Golf, golf_id)
         if golf:
             tour = Tour(name=name, jour=jour, date=date, golf_id=golf_id, par=golf.par,
                         slope=golf.slope, sss=golf.sss, pcc=pcc, pars=golf.pars,
@@ -263,7 +263,7 @@ def start_score():
 @app.route('/add_score/<int:tour_id>', methods=['GET', 'POST'])
 @login_required
 def add_score(tour_id):
-    tour = Tour.query.get(tour_id)
+    tour = db.session.get(Tour, tour_id)
     if not tour:
         return redirect(url_for('index'))
     score = Score.query.filter_by(tour_id=tour_id).first()
@@ -387,7 +387,7 @@ def export_csv():
         writer = csv.writer(f)
         writer.writerow(['Tour', 'Date', 'Total', 'SBA', 'Diff'])
         for s in Score.query.all():
-            t = Tour.query.get(s.tour_id)
+            t = db.session.get(Tour, s.tour_id)
             holes = s.holes or []
             total_score = sum(h.get('strokes', 0) for h in holes)
             total_sba = sum(h.get('adjusted') or 0 for h in holes)
@@ -415,7 +415,7 @@ def overall_stats():
         total_scores += card_score_total
         card_sba_total = sum(h.get('adjusted') or 0 for h in holes)
         total_sba += card_sba_total
-        t = Tour.query.get(s.tour_id)
+        t = db.session.get(Tour, s.tour_id)
         if t and t.slope and t.sss is not None:
             diffs.append(diff_whs(card_sba_total, t.slope, t.sss, t.pcc))
     avg_putts = format(total_putts / num_cards, '.1f') if num_cards else '0.0'
