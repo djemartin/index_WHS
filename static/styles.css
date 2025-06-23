@@ -27,3 +27,8 @@ body.light-theme {
   right: 1rem;
   z-index: 1000;
 }
+
+/* Ensure score inputs are wide enough for multi-digit values */
+td input[type="number"].form-control {
+  min-width: 3.5ch;
+}
