@@ -45,14 +45,10 @@
     const link = document.getElementById('theme-link');
     const icon = document.querySelector('.theme-toggle i');
     const root = document.documentElement;
-    document.body.classList.remove('dark-theme', 'light-theme', 'golf-theme');
+    document.body.classList.remove('dark-theme', 'golf-theme');
     root.classList.remove('dark');
 
-    if(theme === 'light'){
-      link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css';
-      document.body.classList.add('light-theme');
-      icon.className = 'bi bi-moon';
-    } else if(theme === 'golf') {
+    if(theme === 'golf') {
       link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css';
       document.body.classList.add('golf-theme');
       icon.className = 'bi bi-flag-fill';
@@ -68,7 +64,7 @@
 
   function toggleTheme(){
     const current = localStorage.getItem('theme') || 'dark';
-    const next = current === 'dark' ? 'light' : (current === 'light' ? 'golf' : 'dark');
+    const next = current === 'dark' ? 'golf' : 'dark';
     setTheme(next);
   }
 
