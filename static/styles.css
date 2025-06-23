@@ -1,23 +1,123 @@
+/* Import de la police Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* Variables CSS pour le thème Golf */
+:root {
+  --golf-green: #2E7D32;
+  --golf-darkgreen: #1B5E20;
+  --golf-beige: #D7C4A3;
+  --golf-gold: #C19A6B;
+  --golf-ocean: #0277BD;
+  --golf-rust: #B71C1C;
+  --golf-bg: #F5F5F5;
+  --golf-text: #333333;
+}
+
+/* Mode sombre */
+:root.dark {
+  --golf-bg: #121212;
+  --golf-text: #E0E0E0;
+}
+
+/* Styles globaux */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--golf-bg);
+  color: var(--golf-text);
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body.light-theme {
-  background: #F5F5F5;
-  color: #333333;
+h1, h2, h3, h4, h5, h6 {
+  color: var(--golf-green);
+  font-weight: 600;
 }
 
-body.dark-theme {
-  background: #121212;
-  color: #E0E0E0;
+a {
+  color: var(--golf-ocean);
+  text-decoration: none;
 }
-.best-diff {
-  color: #ffae42;
-  font-weight: bold;
+a:hover {
+  text-decoration: underline;
 }
+
+/* Boutons */
+.button {
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: var(--golf-darkgreen);
+  color: white;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background-color: var(--golf-green);
+}
+
+/* Cartes */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  transition: background-color 0.3s ease;
+}
+.dark .card {
+  background-color: #1e1e1e;
+  color: var(--golf-text);
+}
+
+/* Badges */
+.badge-green { background-color: var(--golf-green); color: white; padding: 0.25em 0.6em; border-radius: 6px; }
+.badge-ocean { background-color: var(--golf-ocean); color: white; padding: 0.25em 0.6em; border-radius: 6px; }
+.badge-rust  { background-color: var(--golf-rust);  color: white; padding: 0.25em 0.6em; border-radius: 6px; }
+.badge-gold  { background-color: var(--golf-gold);  color: white; padding: 0.25em 0.6em; border-radius: 6px; }
+
+/* Tableau */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #ccc;
+}
+th {
+  background-color: var(--golf-beige);
+  color: var(--golf-text);
+}
+
+/* Dark mode override */
+.dark table th {
+  background-color: #2c2c2c;
+  color: var(--golf-text);
+}
+
+/* Toggle Switch */
+.toggle {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em 0.75em;
+  border-radius: 20px;
+  background-color: var(--golf-ocean);
+  color: white;
+  font-size: 0.9rem;
+}
+
+/* Utilitaires */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.p-2 { padding: 0.5rem; }
+.rounded { border-radius: 0.5rem; }
+.shadow { box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+
 /* Theme toggle button */
 .theme-toggle {
   position: fixed;
@@ -30,14 +130,10 @@ body.dark-theme {
 td input[type="number"].form-control {
   min-width: 3.5ch;
 }
-/* Golf theme colors */
-body.golf-theme {
-  background: #F5F5F5;
-  color: #333333;
-}
 
+/* Couleurs de la barre de navigation pour le theme golf */
 .golf-theme .navbar {
-  background-color: #2E7D32;
+  background-color: var(--golf-green);
 }
 
 .golf-theme .navbar-brand,
@@ -46,11 +142,17 @@ body.golf-theme {
 }
 
 .golf-theme .btn-primary {
-  background-color: #1B5E20;
-  border-color: #1B5E20;
+  background-color: var(--golf-darkgreen);
+  border-color: var(--golf-darkgreen);
 }
 
 .golf-theme .btn-primary:hover {
-  background-color: #2E7D32;
-  border-color: #2E7D32;
+  background-color: var(--golf-green);
+  border-color: var(--golf-green);
+}
+
+/* Mise en avant du meilleur Diff */
+.best-diff {
+  color: #ffae42;
+  font-weight: bold;
 }

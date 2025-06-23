@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}WHS Golf{% endblock %}</title>
@@ -36,7 +36,7 @@
       }
     </script>
 </head>
-<body class="dark-theme dark">
+<body class="dark-theme">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="{{ url_for('index') }}">WHS Golf</a>
@@ -71,7 +71,9 @@
   function setTheme(theme){
     const link = document.getElementById('theme-link');
     const icon = document.querySelector('.theme-toggle i');
-    document.body.classList.remove('dark-theme', 'light-theme', 'golf-theme', 'dark');
+    const root = document.documentElement;
+    document.body.classList.remove('dark-theme', 'light-theme', 'golf-theme');
+    root.classList.remove('dark');
 
     if(theme === 'light'){
       link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css';
@@ -83,7 +85,8 @@
       icon.className = 'bi bi-flag-fill';
     } else {
       link.href = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/darkly/bootstrap.min.css';
-      document.body.classList.add('dark-theme', 'dark');
+      document.body.classList.add('dark-theme');
+      root.classList.add('dark');
       icon.className = 'bi bi-moon-fill';
     }
 
