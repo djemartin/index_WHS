@@ -13,6 +13,7 @@ body.dark-theme {
 body.light-theme {
   background: #f8f9fa;
   color: #212529;
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
 }
 .best-diff {
   color: #ffae42;
