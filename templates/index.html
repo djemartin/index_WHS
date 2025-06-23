@@ -5,6 +5,7 @@
 {% if new_index is not none %}
 <p class="text-center fw-bold">Nouvel Index: {{ new_index }}</p>
 {% endif %}
+<div class="table-responsive">
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -49,4 +50,5 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}
