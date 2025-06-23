@@ -3,20 +3,21 @@
 
 /* Variables CSS pour le thème Golf */
 :root {
-  --golf-green: #2E7D32;
-  --golf-darkgreen: #1B5E20;
+  --golf-green: #2E7D32; /* accent - lawn green */
+  --golf-darkgreen: #1B5E20; /* dark green */
   --golf-beige: #D7C4A3;
   --golf-gold: #C19A6B;
   --golf-ocean: #0277BD;
   --golf-rust: #B71C1C;
-  --golf-bg: #F5F5F5;
+  --golf-bg: #F5F5DC; /* beige sand */
   --golf-text: #333333;
+  --accent-color: var(--golf-green);
 }
 
 /* Mode sombre */
 :root.dark {
-  --golf-bg: #121212;
-  --golf-text: #E0E0E0;
+  --golf-bg: var(--golf-darkgreen);
+  --golf-text: #F5F5F5;
 }
 
 /* Styles globaux */
@@ -48,11 +49,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-  color: var(--golf-ocean);
+  color: var(--accent-color);
   text-decoration: none;
 }
 a:hover {
   text-decoration: underline;
+}
+
+::selection {
+  background-color: var(--accent-color);
+  color: #ffffff;
 }
 
 /* Boutons */
@@ -62,12 +68,12 @@ a:hover {
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  background-color: var(--golf-darkgreen);
-  color: white;
+  background-color: var(--accent-color);
+  color: #FFFFFF;
   transition: background-color 0.3s ease;
 }
 .button:hover {
-  background-color: var(--golf-green);
+  background-color: var(--golf-darkgreen);
 }
 
 /* Cartes */
@@ -80,13 +86,13 @@ a:hover {
   transition: background-color 0.3s ease;
 }
 .dark .card {
-  background-color: #1e1e1e;
+  background-color: #214421;
   color: var(--golf-text);
 }
 
 /* Badges */
 .badge-green { background-color: var(--golf-green); color: white; padding: 0.25em 0.6em; border-radius: 6px; }
-.badge-ocean { background-color: var(--golf-ocean); color: white; padding: 0.25em 0.6em; border-radius: 6px; }
+.badge-ocean { background-color: var(--accent-color); color: #FFFFFF; padding: 0.25em 0.6em; border-radius: 6px; }
 .badge-rust  { background-color: var(--golf-rust);  color: white; padding: 0.25em 0.6em; border-radius: 6px; }
 .badge-gold  { background-color: var(--golf-gold);  color: white; padding: 0.25em 0.6em; border-radius: 6px; }
 
@@ -118,7 +124,7 @@ th {
   align-items: center;
   padding: 0.25em 0.75em;
   border-radius: 20px;
-  background-color: var(--golf-ocean);
+  background-color: var(--accent-color);
   color: white;
   font-size: 0.9rem;
 }
@@ -154,13 +160,13 @@ td input[type="number"].form-control {
 }
 
 .golf-theme .btn-primary {
-  background-color: var(--golf-darkgreen);
-  border-color: var(--golf-darkgreen);
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 .golf-theme .btn-primary:hover {
-  background-color: var(--golf-green);
-  border-color: var(--golf-green);
+  background-color: var(--golf-darkgreen);
+  border-color: var(--golf-darkgreen);
 }
 
 /* Mise en avant du meilleur Diff */
