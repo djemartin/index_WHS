@@ -9,6 +9,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
 
+    @property
+    def doc_id(self):
+        """Return id for compatibility with templates expecting doc_id."""
+        return self.id
+
 
 class Golf(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +25,11 @@ class Golf(db.Model):
     tees = db.Column(db.String(20))
     pars = db.Column(db.PickleType)
     hcps = db.Column(db.PickleType)
+
+    @property
+    def doc_id(self):
+        """Return id for compatibility with templates expecting doc_id."""
+        return self.id
 
 
 class Tour(db.Model):
@@ -39,6 +49,11 @@ class Tour(db.Model):
     golf = db.relationship('Golf')
     user = db.relationship('User')
 
+    @property
+    def doc_id(self):
+        """Return id for compatibility with templates expecting doc_id."""
+        return self.id
+
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +62,11 @@ class Score(db.Model):
     holes = db.Column(db.PickleType)
 
     tour = db.relationship('Tour')
+
+    @property
+    def doc_id(self):
+        """Return id for compatibility with templates expecting doc_id."""
+        return self.id
 
 
 class Stats(db.Model):
