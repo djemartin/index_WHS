@@ -25,9 +25,9 @@
         <tr>
             <td>{{ tour.recent_no if tour.recent_no is not none else '' }}</td>
             <td>{{ tour.name }}</td>
-            <td>{{ tour.get('jour') }}</td>
-            <td>{{ tour.get('date') }}</td>
-            <td>{{ tour.get('pcc', 0) }}</td>
+            <td>{{ tour.jour }}</td>
+            <td>{{ tour.date }}</td>
+            <td>{{ tour.pcc if tour.pcc is not none else 0 }}</td>
             <td>
                 {% set g = golfs.get(tour.golf_id) %}
                 {{ g.name if g }}

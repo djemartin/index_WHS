@@ -36,8 +36,8 @@
     {% for c in cards %}
         <tr>
             <td>{{ c.tour.name }}</td>
-            <td>{{ c.tour.get('jour') }}</td>
-            <td>{{ c.tour.get('pcc', 0) }}</td>
+            <td>{{ c.tour.jour }}</td>
+            <td>{{ c.tour.pcc if c.tour.pcc is not none else 0 }}</td>
             <td>{{ c.golf.name if c.golf }}</td>
             <td>{{ c.total_score }}</td>
             <td>{{ c.total_sba }}</td>
