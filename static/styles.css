@@ -196,12 +196,17 @@ input[type="number"] {
 .dark-theme {
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
+  --bs-body-font-family: 'Inter', sans-serif;
 }
 
 .golf-theme .form-control,
 .golf-theme .form-select,
 .golf-theme .btn,
-.golf-theme .card {
+.golf-theme .card,
+.dark-theme .form-control,
+.dark-theme .form-select,
+.dark-theme .btn,
+.dark-theme .card {
   border-radius: 0.375rem;
   font-size: 1rem;
 }
