@@ -210,3 +210,8 @@ input[type="number"] {
   border-radius: 0.375rem;
   font-size: 1rem;
 }
+
+/* Ensure table input text is clearly visible in golf theme */
+.golf-theme .form-control {
+  color: #000;
+}
