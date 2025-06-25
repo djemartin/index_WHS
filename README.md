@@ -15,6 +15,8 @@ Key features:
 - Quick creation of a tour using "Nouvelle Carte" to jump directly to score entry.
 - View, edit and delete existing tours from the home page.
 - Statistics for each scorecard are stored in the SQLite database and the WHS differential is shown when viewing a card.
+- Filter the score list by golf course for easier navigation.
+- Harmonised typography and table layout for a smoother user experience.
 
 Install dependencies with:
 ```
