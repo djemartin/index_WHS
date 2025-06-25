@@ -99,6 +99,13 @@ a:hover {
   color: var(--golf-text);
 }
 
+/* Ensure table text is visible in golf theme */
+.golf-theme table td,
+.golf-theme .table td {
+  background-color: #ffffff;
+  color: #000000;
+}
+
 /* Badges */
 .badge-green { background-color: var(--golf-green); color: white; padding: 0.25em 0.6em; border-radius: 6px; }
 .badge-ocean { background-color: var(--accent-color); color: #FFFFFF; padding: 0.25em 0.6em; border-radius: 6px; }
