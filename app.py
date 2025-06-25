@@ -342,12 +342,15 @@ def add_score(tour_id):
 def list_scores():
     current_index = request.args.get('index', type=float)
     sort_key = request.args.get('sort', 'date')
+    golf_filter = request.args.get('golf', type=int)
     golfs = {g.id: g for g in Golf.query.all()}
     tours = {t.id: t for t in Tour.query.all()}
     cards = []
     for s in Score.query.all():
         tour = tours.get(s.tour_id)
         if not tour:
+            continue
+        if golf_filter and tour.golf_id != golf_filter:
             continue
         holes = s.holes or []
         total_score = sum(h.get('strokes', 0) for h in holes)
@@ -375,7 +378,14 @@ def list_scores():
         cards.sort(key=lambda x: (x['diff'] is None, x.get('diff')))
     else:
         cards.sort(key=lambda x: x['tour'].date or '')
-    return render_template('scores_list.html', cards=cards, current_index=current_index, sort=sort_key)
+    return render_template(
+        'scores_list.html',
+        cards=cards,
+        current_index=current_index,
+        sort=sort_key,
+        golfs=golfs,
+        golf_filter=golf_filter,
+    )
 
 
 @app.route('/view_score/<int:tour_id>')

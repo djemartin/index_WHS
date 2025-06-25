@@ -16,6 +16,16 @@
             </select>
         </label>
     </div>
+    <div class="col-auto">
+        <label class="form-label">Golf
+            <select name="golf" class="form-select">
+                <option value="">Tous</option>
+                {% for g in golfs.values() %}
+                <option value="{{ g.id }}" {% if g.id == golf_filter %}selected{% endif %}>{{ g.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
     <div class="col-auto align-self-end">
         <button type="submit" class="btn btn-primary">Appliquer</button>
     </div>
