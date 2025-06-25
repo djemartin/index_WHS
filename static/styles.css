@@ -90,6 +90,13 @@ a:hover {
   color: var(--golf-text);
 }
 
+/* Harmonize table colors with add_score reference */
+.dark table td,
+.dark .table td {
+  background-color: #214421;
+  color: var(--golf-text);
+}
+
 /* Badges */
 .badge-green { background-color: var(--golf-green); color: white; padding: 0.25em 0.6em; border-radius: 6px; }
 .badge-ocean { background-color: var(--accent-color); color: #FFFFFF; padding: 0.25em 0.6em; border-radius: 6px; }
